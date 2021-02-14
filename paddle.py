@@ -6,13 +6,23 @@ class Paddle():
         self.x = x
         self.y = y
         
-        self.height = 2
-        self.weight = 10
+        self.height = 1
+        self.width = 10
 
-    def move(self):
+    def update_position(self, x, y):
+        self.x = x
+        self.y = y
+
+    def update_dimension(self, height=1, width=10):
+        self.height = height
+        self.width = width
+
+    def move(self, board):
         char = get_input()
         if(char == 'd'):
-            self.x = self.x+1
+            if((self.x+self.width-1) < (board.cols-1)):
+                self.x = self.x+1
         elif(char == 'a'):
-            self.x = self.x-1
+            if(self.x > 0):
+                self.x = self.x-1
         return char
