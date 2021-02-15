@@ -1,6 +1,6 @@
 from board import Board
 
-board = Board(paddle)
+board = Board()
 
 while(True):
     check = board.paddle.move(board)
