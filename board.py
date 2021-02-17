@@ -12,13 +12,13 @@ class Board():
         self.ball = Ball(self.cols//2 - 2, self.rows-2) # moving ball on top of paddle
         self.score = 0
         self.lives = 3
+        self.bg_pixel = Back.BLACK+' '+Style.RESET_ALL
         self.render()
 
     def render(self):
 
         system('clear')
-        bg_pixel = Back.BLACK+' '+Style.RESET_ALL
-        self.board = [[bg_pixel for i in range(self.cols)] for j in range(self.rows)]
+        self.board = [[self.bg_pixel for i in range(self.cols)] for j in range(self.rows)]
         # self.board = []
         # for j in range(self.rows+2):
         #     row = []
@@ -37,7 +37,8 @@ class Board():
         # render ball
 
         # updating distance based on velocity
-        self.ball.update_position(self.ball.x+self.ball.velocity_x, self.ball.y+self.ball.velocity_y)
+        # self.ball.update_position(self.ball.x+self.ball.velocity_x, self.ball.y+self.ball.velocity_y)
+        self.ball.move(self)
 
         # checking for collisions
         
@@ -70,17 +71,17 @@ class Board():
         title = "Lets Break Bricks"
         title_offset = (self.cols+wall-len(title)) // 2
         for j in range(0, len(title)):
-            self.output[1][title_offset+j] = Back.BLUE+Fore.MAGENTA+title[j]+Style.RESET_ALL
+            self.output[1][title_offset+j] = Back.BLUE+Fore.RED+title[j]+Style.RESET_ALL
         
         score_text = "Score: {}".format(self.score)
         score_text_offset = (self.cols+wall-len(score_text)) // 8
         for j in range(0, len(score_text)):
-            self.output[3][score_text_offset+j] = Back.BLUE+Fore.MAGENTA+score_text[j]+Style.RESET_ALL
+            self.output[3][score_text_offset+j] = Back.BLUE+Fore.RED+score_text[j]+Style.RESET_ALL
         
         lives_text = "Lives: {}".format(self.lives)
         lives_text_offset = (self.cols+wall-len(lives_text)) * 7 // 8
         for j in range(0, len(lives_text)):
-            self.output[3][lives_text_offset+j] = Back.BLUE+Fore.MAGENTA+lives_text[j]+Style.RESET_ALL
+            self.output[3][lives_text_offset+j] = Back.BLUE+Fore.RED+lives_text[j]+Style.RESET_ALL
         
         for j in range(0, self.rows):
             for i in range(0, self.cols):

@@ -30,7 +30,7 @@ def get_input(timeout=0.09):
     try:
         text = getch()()
         signal.alarm(0)
-        # signal.signal(signal.SIGALRM, signal.SIG_IGN)
+        signal.signal(signal.SIGALRM, signal.SIG_IGN)
         return text
     except PingException:
         pass

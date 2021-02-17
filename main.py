@@ -9,3 +9,5 @@ while(True):
     if(check == 'q'):
         break
     board.render()
+
+# board.ball.move(board)
