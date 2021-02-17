@@ -123,7 +123,19 @@ class Ball():
                 # print("-->", board.board[coord['y']+1][coord['x']])
                 if(board.board[coord['y']+1][coord['x']] != board.bg_pixel):
                     # self.update_position(self.x, self.y-1)
-                    self.update_velocity(self.velocity_x, -self.velocity_y)
+                    if(coord['y']+1 == board.paddle.y):
+                        center_x = (board.paddle.x+board.paddle.width-1)//2
+                        print((center_x, coord['y']+1))
+                        factor = (coord['x']-center_x)
+                        print(factor)
+                        new_velocity_x = self.velocity_x-factor
+                        if(new_velocity_x < -3):
+                            new_velocity_x = -3
+                        elif(new_velocity_x > 3):
+                            new_velocity_x = 3
+                        self.update_velocity(new_velocity_x, -self.velocity_y)
+                    else:
+                        self.update_velocity(self.velocity_x, -self.velocity_y)
                     return True
         return False
 

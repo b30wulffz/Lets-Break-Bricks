@@ -9,7 +9,7 @@ class Paddle():
         self.y = y
         
         self.height = 1
-        self.width = 10
+        self.width = 20
 
         self.pixel = Back.GREEN+' '+Style.RESET_ALL
 
