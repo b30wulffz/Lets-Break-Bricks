@@ -85,6 +85,7 @@ class Ball():
                 return True
             elif coord['x'] > 0 and coord['y']>=0 and coord['y']<board.rows:
                 if(board.board[coord['y']][coord['x']-1] != board.bg_pixel):
+                    # self.update_position(self.x+1, self.y)
                     self.update_velocity(-self.velocity_x, self.velocity_y)
                     return True
 
@@ -96,6 +97,7 @@ class Ball():
                 return True
             elif coord['x'] < board.cols-1 and coord['y']>=0 and coord['y']<board.rows:
                 if(board.board[coord['y']][coord['x']+1] != board.bg_pixel):
+                    # self.update_position(self.x-1, self.y)
                     self.update_velocity(-self.velocity_x, self.velocity_y)
                     return True
         
@@ -107,6 +109,7 @@ class Ball():
                 return True
             elif coord['y'] > 0 and coord['x']>=0 and coord['x']<board.cols:
                 if(board.board[coord['y']-1][coord['x']] != board.bg_pixel):
+                    # self.update_position(self.x, self.y+1)
                     self.update_velocity(self.velocity_x, -self.velocity_y)
                     return True
         
@@ -117,10 +120,9 @@ class Ball():
                 self.update_velocity(self.velocity_x, -self.velocity_y)
                 return True
             elif coord['y'] < board.rows-1 and coord['x']>=0 and coord['x']<board.cols:
-                print("-->", board.board[coord['y']+1][coord['x']])
+                # print("-->", board.board[coord['y']+1][coord['x']])
                 if(board.board[coord['y']+1][coord['x']] != board.bg_pixel):
-                    # if self.velocity_y > 0:
-                    print("yes")
+                    # self.update_position(self.x, self.y-1)
                     self.update_velocity(self.velocity_x, -self.velocity_y)
                     return True
         return False
@@ -149,9 +151,12 @@ class Ball():
                 y = init_y
                 while True:
                     # check top bottom left right
-                    self.update_position(x,y)
-                    if self.check_collision(board) == True:
-                        break
+                    if i!=0:
+                        self.update_position(x,y)
+                        if self.check_collision(board) == True:
+                            # if x==init_y and y == init_y:
+                            #     self.update_position(x,y)
+                            break
                     i+=1
                     if(i%step == 0 and x != final_x):
                         if self.velocity_x>0:
@@ -160,8 +165,8 @@ class Ball():
                             x = x-1   
                         # check whether inside any object, or out of bound 
                         self.update_position(x,y)
-                        # if self.check_overlap_collision(board) == True:
-                        #     break
+                        if self.check_overlap_collision(board) == True:
+                            break
                     if(self.velocity_y > 0):
                         y = y+1
                         if(y>final_y):
@@ -176,9 +181,10 @@ class Ball():
                 x = init_x
                 while True:
                     # check top bottom left right
-                    self.update_position(x,y)
-                    if self.check_collision(board) == True:
-                        break
+                    if i!=0:
+                        self.update_position(x,y)
+                        if self.check_collision(board) == True:
+                            break
                     i+=1
                     if(i%step == 0 and y != final_y):
                         if self.velocity_y>0:
@@ -187,8 +193,8 @@ class Ball():
                             y = y-1   
                         # check whether inside any object, or out of bound 
                         self.update_position(x,y)
-                        # if self.check_overlap_collision(board) == True:
-                        #     break
+                        if self.check_overlap_collision(board) == True:
+                            break
                     if(self.velocity_x > 0):
                         x = x+1
                         if(x>final_x):
@@ -201,11 +207,12 @@ class Ball():
             if(self.velocity_x !=0):
                 x = init_x
                 while True:
-                    print((x,init_y))
+                    # print((x,init_y))
                     # check top bottom left right
-                    self.update_position(x,y)
-                    if self.check_collision(board) == True:
-                        break
+                    if x!= init_x:
+                        self.update_position(x,init_y)
+                        if self.check_collision(board) == True:
+                            break
                     if(self.velocity_x > 0):
                         x = x+1
                         if(x>final_x):
@@ -217,11 +224,12 @@ class Ball():
             elif(self.velocity_y != 0):
                 y = init_y
                 while True:
-                    print((init_x,y))
+                    # print((init_x,y))
                     # check top bottom left right
-                    self.update_position(x,y)
-                    if self.check_collision(board) == True:
-                        break
+                    if y!=init_y:
+                        self.update_position(init_x,y)
+                        if self.check_collision(board) == True:
+                            break
                     if(self.velocity_y > 0):
                         y = y+1
                         if(y>final_y):
@@ -230,7 +238,7 @@ class Ball():
                         y = y-1
                         if(y<final_y):
                             break
-        print((self.x, self.y))
+        # print((self.x, self.y))
         # for row in range(self.y, self.y+self.height):
         #     for col in range(self.x, self.x+self.width):
         #         board.board[row][col] = board.ball.pixel

@@ -58,6 +58,7 @@ class Board():
 
         for row in range(self.ball.y, self.ball.y+self.ball.height):
             for col in range(self.ball.x, self.ball.x+self.ball.width):
+                # print("->", (col, row))
                 self.board[row][col] = self.ball.pixel
 
         # adding borders to board
