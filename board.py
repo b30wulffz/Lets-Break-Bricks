@@ -2,19 +2,47 @@ from colorama import Fore, Back, Style
 from os import system
 from paddle import Paddle
 from ball import Ball
+from brick import EasyBrick, HardBrick, UnbreakableBrick
 import random
 
 class Board():
 
-    def __init__(self, bricks=[], balls=[]):
+    def __init__(self, balls=[]):
         self.cols = 80
         self.rows = 30
         # self.rows = 34
-        self.paddle = Paddle(self.cols//2 -6 , self.rows-1) # moving paddle to center
+        self.paddle = Paddle(self.cols//2 -12 , self.rows-1) # moving paddle to center
         self.ball = Ball(random.randrange(self.paddle.x, self.paddle.x+self.paddle.width), self.rows-2) # moving ball on top of paddle at a random position
         self.score = 0
         self.lives = 3
         self.bg_pixel = Back.BLACK+' '+Style.RESET_ALL
+
+        # generate bricks
+        ub = UnbreakableBrick(0,0)
+        x, y = 1, 1
+
+        self.bricks = []
+
+        while True:
+            # if (y-1)%4 == 0:
+            x = random.choice([1, ub.width//2, ub.width//2 + 1])
+            
+                # x = 
+            while True:
+                if((x+ub.width)>=self.cols):
+                    break
+                index = random.choice([0,1])
+                if(index == 1):
+                    self.bricks.append(EasyBrick(x,y))
+                else:
+                    self.bricks.append(HardBrick(x,y))
+                x+=ub.width+1
+                # print((x,y), end=" ")
+            y+=ub.height+1
+            # print()
+            if(y>=8):
+                    break
+
         self.render()
 
     def render(self):
@@ -35,6 +63,12 @@ class Board():
         for row in range(self.paddle.y, self.paddle.y+self.paddle.height):
             for col in range(self.paddle.x, self.paddle.x+self.paddle.width):
                 self.board[row][col] = self.paddle.pixel
+
+        # render bricks
+        for brick in self.bricks:
+            for row in range(brick.y, brick.y+brick.height):
+                for col in range(brick.x, brick.x+brick.width):
+                    self.board[row][col] = brick.pixel
 
         # render ball
 
