@@ -2,6 +2,7 @@ from colorama import Fore, Back, Style
 from os import system
 from paddle import Paddle
 from ball import Ball
+import random
 
 class Board():
 
@@ -10,7 +11,7 @@ class Board():
         self.rows = 30
         # self.rows = 34
         self.paddle = Paddle(self.cols//2 -6 , self.rows-1) # moving paddle to center
-        self.ball = Ball(self.cols//2 - 2, self.rows-2) # moving ball on top of paddle
+        self.ball = Ball(random.randrange(self.paddle.x, self.paddle.x+self.paddle.width), self.rows-2) # moving ball on top of paddle at a random position
         self.score = 0
         self.lives = 3
         self.bg_pixel = Back.BLACK+' '+Style.RESET_ALL
