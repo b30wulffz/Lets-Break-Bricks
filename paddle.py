@@ -9,7 +9,7 @@ class Paddle():
         self.y = y
         
         self.height = 1
-        self.width = 20
+        self.width = 30
 
         self.pixel = Back.GREEN+' '+Style.RESET_ALL
 
@@ -45,7 +45,7 @@ class Paddle():
             if(any((point["x"]>=self.x and point["x"]<=(self.x+self.width-1) and point["y"]+1==self.y) for point in board.ball.get_coordinates("bottom"))):
                 # for moving ball when kept on paddle
                 if(board.ball.velocity_x == 0 and board.ball.velocity_y == 0):
-                    board.ball.update_velocity(random.choice([-1,1]), -1)
-                    # board.ball.update_velocity(0, -1)
+                    # board.ball.update_velocity(random.choice([-1,1]), -1)
+                    board.ball.update_velocity(1, -1)
     
         return char

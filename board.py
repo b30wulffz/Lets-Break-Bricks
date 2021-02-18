@@ -7,7 +7,8 @@ class Board():
 
     def __init__(self, bricks=[], balls=[]):
         self.cols = 80
-        self.rows = 34
+        self.rows = 30
+        # self.rows = 34
         self.paddle = Paddle(self.cols//2 -6 , self.rows-1) # moving paddle to center
         self.ball = Ball(self.cols//2 - 2, self.rows-2) # moving ball on top of paddle
         self.score = 0

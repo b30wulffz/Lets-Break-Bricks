@@ -123,19 +123,32 @@ class Ball():
                 # print("-->", board.board[coord['y']+1][coord['x']])
                 if(board.board[coord['y']+1][coord['x']] != board.bg_pixel):
                     # self.update_position(self.x, self.y-1)
+                    new_velocity_y = self.velocity_y
+                    if(self.velocity_y>0):
+                        new_velocity_y = -self.velocity_y
                     if(coord['y']+1 == board.paddle.y):
-                        center_x = (board.paddle.x+board.paddle.width-1)//2
-                        print((center_x, coord['y']+1))
+                        center_x = board.paddle.x+ (board.paddle.width-1)//2
+                        print(board.paddle.x, board.paddle.width, coord['x'], (center_x, coord['y']+1))
                         factor = (coord['x']-center_x)
-                        print(factor)
-                        new_velocity_x = self.velocity_x-factor
-                        if(new_velocity_x < -3):
-                            new_velocity_x = -3
-                        elif(new_velocity_x > 3):
-                            new_velocity_x = 3
-                        self.update_velocity(new_velocity_x, -self.velocity_y)
+                        factor = factor*100 / ((board.paddle.width)//2)
+                        print("->>>>", factor)
+                        if(factor < 0):
+                            if(factor<-50):
+                                new_velocity_x = self.velocity_x-2
+                            else:
+                                new_velocity_x = self.velocity_x-1
+                            if(new_velocity_x < -2):
+                                new_velocity_x = -2
+                        else:
+                            if(factor>50):
+                                new_velocity_x = self.velocity_x+2
+                            else:
+                                new_velocity_x = self.velocity_x+1
+                            if(new_velocity_x > 2):
+                                new_velocity_x = 2
+                        self.update_velocity(new_velocity_x, new_velocity_y)
                     else:
-                        self.update_velocity(self.velocity_x, -self.velocity_y)
+                        self.update_velocity(self.velocity_x, new_velocity_y)
                     return True
         return False
 
