@@ -6,10 +6,17 @@ class Brick():
         self.x = x
         self.y = y
         self.height = 1
-        self.width = 6
+        self.width = 6   
+        self.health = -1
 
-    def check_collision(self):
-        pass
+    def reduce_health(self):
+        if(self.health > 0):
+            self.health -= 1
+            if(self.health == 1):
+                self.pixel =  Back.YELLOW+' '+Style.RESET_ALL
+            elif(self.health == 0):
+                return True
+        return False
 
 class EasyBrick(Brick):
 

@@ -8,11 +8,11 @@ import random
 class Board():
 
     def __init__(self, balls=[]):
-        self.cols = 80
+        self.cols = 84
         self.rows = 30
         # self.rows = 34
         self.paddle = Paddle(self.cols//2 -12 , self.rows-1) # moving paddle to center
-        self.ball = Ball(random.randrange(self.paddle.x, self.paddle.x+self.paddle.width), self.rows-2) # moving ball on top of paddle at a random position
+        self.ball = Ball(random.randrange(self.paddle.x, self.paddle.x+self.paddle.width-1), self.rows-2) # moving ball on top of paddle at a random position
         self.score = 0
         self.lives = 3
         self.bg_pixel = Back.BLACK+' '+Style.RESET_ALL
@@ -44,6 +44,18 @@ class Board():
                     break
 
         self.render()
+
+    def brick_detect_and_remove(self, x, y):
+        for brick in self.bricks:
+            x_lower = brick.x
+            x_upper = brick.x + brick.width -1
+            y_lower = brick.y
+            y_upper = brick.y + brick.height -1
+            if( x_lower <= x and x_upper >= x and y_lower <= y and y_upper >= y):
+                if brick.reduce_health() == True:
+                    self.bricks.remove(brick)
+                return True
+        return False
 
     def render(self):
 

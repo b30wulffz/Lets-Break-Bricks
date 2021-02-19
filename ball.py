@@ -49,6 +49,7 @@ class Ball():
                 if(board.board[coord['y']][coord['x']] != board.bg_pixel):
                     self.update_position(self.x+1, self.y)
                     self.update_velocity(-self.velocity_x, self.velocity_y)
+                    board.brick_detect_and_remove(coord['x'], coord['y'])
                     return True
 
         right_coord = self.get_coordinates("right")
@@ -57,6 +58,7 @@ class Ball():
                 if(board.board[coord['y']][coord['x']] != board.bg_pixel):
                     self.update_position(self.x-1, self.y)
                     self.update_velocity(-self.velocity_x, self.velocity_y)
+                    board.brick_detect_and_remove(coord['x'], coord['y'])
                     return True
         
         top_coord = self.get_coordinates("top")
@@ -65,6 +67,7 @@ class Ball():
                 if(board.board[coord['y']][coord['x']] != board.bg_pixel):
                     self.update_position(self.x, self.y+1)
                     self.update_velocity(self.velocity_x, -self.velocity_y)
+                    board.brick_detect_and_remove(coord['x'], coord['y'])
                     return True
         
         bottom_coord = self.get_coordinates("bottom")
@@ -73,6 +76,7 @@ class Ball():
                 if(board.board[coord['y']][coord['x']] != board.bg_pixel):
                     self.update_position(self.x, self.y-1)
                     self.update_velocity(self.velocity_x, -self.velocity_y)
+                    board.brick_detect_and_remove(coord['x'], coord['y'])
                     return True
         return False
 
@@ -87,6 +91,7 @@ class Ball():
                 if(board.board[coord['y']][coord['x']-1] != board.bg_pixel):
                     # self.update_position(self.x+1, self.y)
                     self.update_velocity(-self.velocity_x, self.velocity_y)
+                    board.brick_detect_and_remove(coord['x']-1, coord['y'])
                     return True
 
         right_coordinates = self.get_coordinates("right")  # todo overflow check
@@ -99,6 +104,7 @@ class Ball():
                 if(board.board[coord['y']][coord['x']+1] != board.bg_pixel):
                     # self.update_position(self.x-1, self.y)
                     self.update_velocity(-self.velocity_x, self.velocity_y)
+                    board.brick_detect_and_remove(coord['x']+1, coord['y'])
                     return True
         
         top_coordinates = self.get_coordinates("top")
@@ -111,6 +117,7 @@ class Ball():
                 if(board.board[coord['y']-1][coord['x']] != board.bg_pixel):
                     # self.update_position(self.x, self.y+1)
                     self.update_velocity(self.velocity_x, -self.velocity_y)
+                    board.brick_detect_and_remove(coord['x'], coord['y']-1)
                     return True
         
         bottom_coordinates = self.get_coordinates("bottom")  # todo overflow check
@@ -126,6 +133,7 @@ class Ball():
                     new_velocity_y = self.velocity_y
                     if(self.velocity_y>0):
                         new_velocity_y = -self.velocity_y
+                    # paddle detected
                     if(coord['y']+1 == board.paddle.y):
                         center_x = board.paddle.x+ (board.paddle.width-1)//2
                         print(board.paddle.x, board.paddle.width, coord['x'], (center_x, coord['y']+1))
@@ -149,6 +157,7 @@ class Ball():
                         self.update_velocity(new_velocity_x, new_velocity_y)
                     else:
                         self.update_velocity(self.velocity_x, new_velocity_y)
+                        board.brick_detect_and_remove(coord['x'], coord['y']+1)
                     return True
         return False
 
