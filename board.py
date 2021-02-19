@@ -88,6 +88,8 @@ class Board():
 
         system('clear')
         self.board = [[self.bg_pixel for i in range(self.cols)] for j in range(self.rows)]
+        print(self.cols)
+        # print(len(self.board[0]))
         # self.board = []
         # for j in range(self.rows+2):
         #     row = []

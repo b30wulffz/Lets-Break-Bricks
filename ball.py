@@ -52,6 +52,7 @@ class Ball():
                     board.brick_detect_and_remove(coord['x'], coord['y'])
                     return True
 
+
         right_coord = self.get_coordinates("right")
         for coord in right_coord:
             if(coord['y']>=0 and coord['y']<board.rows and coord['x']>=0 and coord['x']<board.cols):
@@ -125,6 +126,7 @@ class Ball():
             if coord['y'] >= board.rows:
                 self.update_position(self.x, board.rows-self.height-1)
                 self.update_velocity(self.velocity_x, -self.velocity_y)
+                # print("yyyyyyyyyyy")
                 return True
             elif coord['y'] < board.rows-1 and coord['x']>=0 and coord['x']<board.cols:
                 # print("-->", board.board[coord['y']+1][coord['x']])
@@ -179,10 +181,13 @@ class Ball():
                 minimum = 'x'
             else:
                 step = x_step // y_step
+
+
             if(minimum == 'x'):
                 x = self.x
                 i = 0
                 y = init_y
+
                 while True:
                     # check top bottom left right
                     if i!=0:
@@ -195,8 +200,14 @@ class Ball():
                     if(i%step == 0 and x != final_x):
                         if self.velocity_x>0:
                             x = x+1
+                            if (x+self.width-1)>=board.cols:
+                                self.update_velocity(-self.velocity_x, self.velocity_y)
+                                break
                         else:
                             x = x-1   
+                            if x<0:
+                                self.update_velocity(-self.velocity_x, self.velocity_y)
+                                break
                         # check whether inside any object, or out of bound 
                         self.update_position(x,y)
                         if self.check_overlap_collision(board) == True:
@@ -205,9 +216,16 @@ class Ball():
                         y = y+1
                         if(y>final_y):
                             break
+                        elif(y>=board.rows):
+                            self.update_velocity(self.velocity_x, -self.velocity_y)
+                            # delete ball
+                            break
                     else:
                         y = y-1
                         if(y<final_y):
+                            break
+                        elif(y<0):
+                            self.update_velocity(self.velocity_x, -self.velocity_y)
                             break
             else:
                 y = self.y
@@ -223,9 +241,17 @@ class Ball():
                     if(i%step == 0 and y != final_y):
                         if self.velocity_y>0:
                             y = y+1
+                            if y>=board.rows:
+                                self.update_velocity(self.velocity_x, -self.velocity_y)
+                                # delete ball
+                                break
                         else:
-                            y = y-1   
+                            y = y-1  
+                            if y<0:
+                                self.update_velocity(self.velocity_x, -self.velocity_y)
+                                break 
                         # check whether inside any object, or out of bound 
+
                         self.update_position(x,y)
                         if self.check_overlap_collision(board) == True:
                             break
@@ -233,9 +259,15 @@ class Ball():
                         x = x+1
                         if(x>final_x):
                             break
+                        elif((x+self.width-1)>=board.cols):
+                            self.update_velocity(-self.velocity_x, self.velocity_y)
+                            break
                     else:
                         x = x-1
                         if(x<final_x):
+                            break
+                        elif(x<0):
+                            self.update_velocity(-self.velocity_x, self.velocity_y)
                             break
         else:
             if(self.velocity_x !=0):
@@ -251,9 +283,15 @@ class Ball():
                         x = x+1
                         if(x>final_x):
                             break
+                        elif((x+self.width-1)>=board.cols):
+                            self.update_velocity(-self.velocity_x, self.velocity_y)
+                            break
                     else:
                         x = x-1
                         if(x<final_x):
+                            break
+                        elif(x<0):
+                            self.update_velocity(-self.velocity_x, self.velocity_y)
                             break
             elif(self.velocity_y != 0):
                 y = init_y
@@ -268,9 +306,16 @@ class Ball():
                         y = y+1
                         if(y>final_y):
                             break
+                        elif(y>=board.rows):
+                            self.update_velocity(self.velocity_x, -self.velocity_y)
+                            # delete ball
+                            break
                     else:
                         y = y-1
                         if(y<final_y):
+                            break
+                        elif(y<0):
+                            self.update_velocity(self.velocity_x, -self.velocity_y)
                             break
         # print((self.x, self.y))
         # for row in range(self.y, self.y+self.height):
