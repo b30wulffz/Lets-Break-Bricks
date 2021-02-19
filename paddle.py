@@ -24,7 +24,14 @@ class Paddle():
     def move(self, board):
         char = get_input()
         if(char == 'd'):
-            if((self.x+self.width-1) < (board.cols-1)):
+            if((self.x+self.width-1) < (board.cols-2)):
+                self.x = self.x+2
+                # check whether ball is touching the paddle
+                if(any((point["x"]>=self.x and point["x"]<=(self.x+self.width-1) and point["y"]+1==self.y) for point in board.ball.get_coordinates("bottom"))):
+                    # for moving ball when kept on paddle
+                    if(board.ball.velocity_x == 0 and board.ball.velocity_y == 0):
+                        board.ball.update_position(board.ball.x+2, board.ball.y)
+            elif((self.x+self.width-1) < (board.cols-1)):
                 self.x = self.x+1
                 # check whether ball is touching the paddle
                 if(any((point["x"]>=self.x and point["x"]<=(self.x+self.width-1) and point["y"]+1==self.y) for point in board.ball.get_coordinates("bottom"))):
@@ -32,7 +39,14 @@ class Paddle():
                     if(board.ball.velocity_x == 0 and board.ball.velocity_y == 0):
                         board.ball.update_position(board.ball.x+1, board.ball.y)
         elif(char == 'a'):
-            if(self.x > 0):
+            if(self.x > 1):
+                self.x = self.x-2
+                # check whether ball is touching the paddle
+                if(any((point["x"]>=self.x and point["x"]<=(self.x+self.width-1) and point["y"]+1==self.y) for point in board.ball.get_coordinates("bottom"))):
+                    # for moving ball when kept on paddle
+                    if(board.ball.velocity_x == 0 and board.ball.velocity_y == 0):
+                        board.ball.update_position(board.ball.x-2, board.ball.y)
+            elif (self.x > 0):
                 self.x = self.x-1
                 # check whether ball is touching the paddle
                 if(any((point["x"]>=self.x and point["x"]<=(self.x+self.width-1) and point["y"]+1==self.y) for point in board.ball.get_coordinates("bottom"))):

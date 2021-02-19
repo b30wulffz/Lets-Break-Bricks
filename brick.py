@@ -8,6 +8,7 @@ class Brick():
         self.height = 1
         self.width = 6   
         self.health = -1
+        self.score = 0
 
     def reduce_health(self):
         if(self.health > 0):
@@ -24,6 +25,7 @@ class EasyBrick(Brick):
         super().__init__(x, y)
         self.health = 1
         self.pixel =  Back.YELLOW+' '+Style.RESET_ALL
+        self.score = 100
     
 class HardBrick(Brick):
 
@@ -31,6 +33,7 @@ class HardBrick(Brick):
         super().__init__(x, y)
         self.health = 2
         self.pixel =  Back.CYAN+' '+Style.RESET_ALL
+        self.score = 200
     
 class UnbreakableBrick(Brick):
 

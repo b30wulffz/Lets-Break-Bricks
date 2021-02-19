@@ -53,6 +53,7 @@ class Board():
             y_upper = brick.y + brick.height -1
             if( x_lower <= x and x_upper >= x and y_lower <= y and y_upper >= y):
                 if brick.reduce_health() == True:
+                    self.score += brick.score
                     self.bricks.remove(brick)
                 return True
         return False
