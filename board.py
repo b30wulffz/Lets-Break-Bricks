@@ -4,6 +4,8 @@ from paddle import Paddle
 from ball import Ball
 from brick import EasyBrick, MediumBrick, HardBrick, UnbreakableBrick, SuperBrick
 import random
+from time import sleep,time
+import math
 
 class Board():
 
@@ -16,6 +18,8 @@ class Board():
         self.score = 0
         self.lives = 3
         self.bg_pixel = Back.BLACK+' '+Style.RESET_ALL
+        self.startTime = time()
+        self.time = 0
 
         # generate bricks
         ub = UnbreakableBrick(0,0)
@@ -85,10 +89,8 @@ class Board():
         return False
 
     def render(self):
-
         system('clear')
         self.board = [[self.bg_pixel for i in range(self.cols)] for j in range(self.rows)]
-        print(self.cols)
         # print(len(self.board[0]))
         # self.board = []
         # for j in range(self.rows+2):
@@ -155,7 +157,13 @@ class Board():
         score_text_offset = (self.cols+wall-len(score_text)) // 8
         for j in range(0, len(score_text)):
             self.output[3][score_text_offset+j] = Back.BLUE+Fore.RED+score_text[j]+Style.RESET_ALL
-        
+
+        time_elpsed = math.floor(time()-self.startTime)
+        time_taken = "Time: {} seconds".format(time_elpsed)
+        time_taken_offset = (self.cols+wall-len(time_taken)) * 4 //8
+        for j in range(0, len(time_taken)):
+            self.output[3][time_taken_offset+j] = Back.BLUE+Fore.RED+time_taken[j]+Style.RESET_ALL
+
         lives_text = "Lives: {}".format(self.lives)
         lives_text_offset = (self.cols+wall-len(lives_text)) * 7 // 8
         for j in range(0, len(lives_text)):
@@ -165,4 +173,34 @@ class Board():
             for i in range(0, self.cols):
                 self.output[j+score_board_height+wall][i+wall] = self.board[j][i]
 
+        
+        if self.lives == 0:
+            game_over_screen_height = 7
+            game_over_screen_width = self.cols//2
+            self.game_over_screen = [[border_pixel for i in range(game_over_screen_width)] for j in range(game_over_screen_height)]
+
+            game_over = "Game Over!"
+            game_over_offset = (game_over_screen_width-len(game_over)) // 2
+            for j in range(0, len(game_over)):
+                self.game_over_screen[1][game_over_offset+j] = Back.BLUE+Fore.RED+game_over[j]+Style.RESET_ALL
+
+            score_text = "Score: {}".format(self.score)
+            score_text_offset = (game_over_screen_width-len(score_text)) // 2
+            for j in range(0, len(score_text)):
+                self.game_over_screen[3][score_text_offset+j] = Back.BLUE+Fore.RED+score_text[j]+Style.RESET_ALL
+
+            time_taken = "Time Taken: {} seconds".format(time_elpsed)
+            time_taken_offset = (game_over_screen_width-len(time_taken)) // 2
+            for j in range(0, len(time_taken)):
+                self.game_over_screen[5][time_taken_offset+j] = Back.BLUE+Fore.RED+time_taken[j]+Style.RESET_ALL
+
+            height_offset = score_board_height+((self.rows//2)-(game_over_screen_height//2)+1)
+            width_offset = 2*wall+((self.cols//2)-(game_over_screen_width//2)) 
+            for row in range(0, game_over_screen_height):
+                for col in range(0, game_over_screen_width):
+                    self.output[height_offset+row][width_offset+col] = self.game_over_screen[row][col]
+
         print("\n".join(["".join(row) for row in self.output]))
+        
+        if(self.lives == 0):
+            return True

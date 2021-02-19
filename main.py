@@ -8,6 +8,7 @@ while(True):
     check = board.paddle.move(board)
     if(check == 'q'):
         break
-    board.render()
+    if board.render() == True:
+        break
 
 # board.ball.move(board)
