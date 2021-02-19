@@ -136,10 +136,10 @@ class Ball():
                     # paddle detected
                     if(coord['y']+1 == board.paddle.y):
                         center_x = board.paddle.x+ (board.paddle.width-1)//2
-                        print(board.paddle.x, board.paddle.width, coord['x'], (center_x, coord['y']+1))
+                        # print(board.paddle.x, board.paddle.width, coord['x'], (center_x, coord['y']+1))
                         factor = (coord['x']-center_x)
                         factor = factor*100 / ((board.paddle.width)//2)
-                        print("->>>>", factor)
+                        # print("->>>>", factor)
                         if(factor < 0):
                             if(factor<-50):
                                 new_velocity_x = self.velocity_x-2

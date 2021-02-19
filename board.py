@@ -2,17 +2,17 @@ from colorama import Fore, Back, Style
 from os import system
 from paddle import Paddle
 from ball import Ball
-from brick import EasyBrick, HardBrick, UnbreakableBrick
+from brick import EasyBrick, MediumBrick, HardBrick, UnbreakableBrick, SuperBrick
 import random
 
 class Board():
 
     def __init__(self, balls=[]):
         self.cols = 84
-        self.rows = 30
-        # self.rows = 34
+        # self.rows = 30
+        self.rows = 34
         self.paddle = Paddle(self.cols//2 -12 , self.rows-1) # moving paddle to center
-        self.ball = Ball(random.randrange(self.paddle.x, self.paddle.x+self.paddle.width-1), self.rows-2) # moving ball on top of paddle at a random position
+        self.ball = Ball(random.randrange(self.paddle.x, self.paddle.x+self.paddle.width-2), self.rows-2) # moving ball on top of paddle at a random position
         self.score = 0
         self.lives = 3
         self.bg_pixel = Back.BLACK+' '+Style.RESET_ALL
@@ -31,9 +31,11 @@ class Board():
             while True:
                 if((x+ub.width)>=self.cols):
                     break
-                index = random.choice([0,1])
-                if(index == 1):
+                index = random.choice([0,0,0,1,1,2])
+                if(index == 0):
                     self.bricks.append(EasyBrick(x,y))
+                elif(index == 1): 
+                    self.bricks.append(MediumBrick(x,y))
                 else:
                     self.bricks.append(HardBrick(x,y))
                 x+=ub.width+1
@@ -43,18 +45,42 @@ class Board():
             if(y>=8):
                     break
 
+        if(len(self.bricks) > 6):
+            ind = random.randint(2,6)
+            self.bricks[ind] = UnbreakableBrick(self.bricks[ind].x, self.bricks[ind].y)
+        if(len(self.bricks) > 20):
+            ind = random.randint(20,20)
+            self.bricks[ind] = UnbreakableBrick(self.bricks[ind].x, self.bricks[ind].y)
+        if(len(self.bricks) > 38):
+            ind = random.randint(35,38)
+            self.bricks[ind] = UnbreakableBrick(self.bricks[ind].x, self.bricks[ind].y)
+            
+        ind = random.choice([13, 14, 29])
+        if(len(self.bricks) > ind):
+            self.bricks[ind] = SuperBrick(self.bricks[ind].x, self.bricks[ind].y)
+
         self.render()
 
-    def brick_detect_and_remove(self, x, y):
+    def brick_detect_and_remove(self, x, y, forced=False):
+        score = 0
         for brick in self.bricks:
             x_lower = brick.x
             x_upper = brick.x + brick.width -1
             y_lower = brick.y
             y_upper = brick.y + brick.height -1
             if( x_lower <= x and x_upper >= x and y_lower <= y and y_upper >= y):
-                if brick.reduce_health() == True:
-                    self.score += brick.score
+                if(type(brick) is SuperBrick):
+                    score = brick.reduce_health(True)
+                    self.score += score
                     self.bricks.remove(brick)
+                    for y in range(brick.y-2, brick.y+brick.height-1+3):
+                        for x in range(brick.x-4, brick.x+brick.width-1+4):
+                            self.brick_detect_and_remove(x,y,True)
+                else:    
+                    score = brick.reduce_health(forced)
+                    if score > 0:
+                        self.score += score
+                        self.bricks.remove(brick)
                 return True
         return False
 
