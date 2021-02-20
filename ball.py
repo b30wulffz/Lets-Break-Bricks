@@ -13,6 +13,8 @@ class Ball():
         self.width = 2
 
         self.pixel =  Back.RED+' '+Style.RESET_ALL
+        self.avoid_pixel = [Back.RED+Fore.WHITE+str(i)+Style.RESET_ALL for i in range(1,7)]
+        self.avoid_pixel.append(self.pixel)
 
     def update_position(self, x, y):
         self.x = x
@@ -46,7 +48,7 @@ class Ball():
         left_coord = self.get_coordinates("left")
         for coord in left_coord:
             if(coord['y']>=0 and coord['y']<board.rows and coord['x']>=0 and coord['x']<board.cols):
-                if(board.board[coord['y']][coord['x']] != board.bg_pixel):
+                if(board.board[coord['y']][coord['x']] != board.bg_pixel and board.board[coord['y']][coord['x']] not in self.avoid_pixel):
                     self.update_position(self.x+1, self.y)
                     self.update_velocity(-self.velocity_x, self.velocity_y)
                     board.brick_detect_and_remove(coord['x'], coord['y'])
@@ -56,7 +58,7 @@ class Ball():
         right_coord = self.get_coordinates("right")
         for coord in right_coord:
             if(coord['y']>=0 and coord['y']<board.rows and coord['x']>=0 and coord['x']<board.cols):
-                if(board.board[coord['y']][coord['x']] != board.bg_pixel):
+                if(board.board[coord['y']][coord['x']] != board.bg_pixel and board.board[coord['y']][coord['x']] not in self.avoid_pixel):
                     self.update_position(self.x-1, self.y)
                     self.update_velocity(-self.velocity_x, self.velocity_y)
                     board.brick_detect_and_remove(coord['x'], coord['y'])
@@ -65,7 +67,7 @@ class Ball():
         top_coord = self.get_coordinates("top")
         for coord in top_coord:
             if(coord['y']>=0 and coord['y']<board.rows and coord['x']>=0 and coord['x']<board.cols):
-                if(board.board[coord['y']][coord['x']] != board.bg_pixel):
+                if(board.board[coord['y']][coord['x']] != board.bg_pixel and board.board[coord['y']][coord['x']] not in self.avoid_pixel):
                     self.update_position(self.x, self.y+1)
                     self.update_velocity(self.velocity_x, -self.velocity_y)
                     board.brick_detect_and_remove(coord['x'], coord['y'])
@@ -74,7 +76,7 @@ class Ball():
         bottom_coord = self.get_coordinates("bottom")
         for coord in bottom_coord:
             if(coord['y']>=0 and coord['y']<board.rows and coord['x']>=0 and coord['x']<board.cols):
-                if(board.board[coord['y']][coord['x']] != board.bg_pixel):
+                if(board.board[coord['y']][coord['x']] != board.bg_pixel and board.board[coord['y']][coord['x']] not in self.avoid_pixel):
                     self.update_position(self.x, self.y-1)
                     self.update_velocity(self.velocity_x, -self.velocity_y)
                     board.brick_detect_and_remove(coord['x'], coord['y'])
@@ -89,7 +91,7 @@ class Ball():
                 self.update_velocity(-self.velocity_x, self.velocity_y)
                 return True
             elif coord['x'] > 0 and coord['y']>=0 and coord['y']<board.rows:
-                if(board.board[coord['y']][coord['x']-1] != board.bg_pixel):
+                if(board.board[coord['y']][coord['x']-1] != board.bg_pixel and board.board[coord['y']][coord['x']-1] not in self.avoid_pixel):
                     # self.update_position(self.x+1, self.y)
                     self.update_velocity(-self.velocity_x, self.velocity_y)
                     board.brick_detect_and_remove(coord['x']-1, coord['y'])
@@ -102,7 +104,7 @@ class Ball():
                 self.update_velocity(-self.velocity_x, self.velocity_y)
                 return True
             elif coord['x'] < board.cols-1 and coord['y']>=0 and coord['y']<board.rows:
-                if(board.board[coord['y']][coord['x']+1] != board.bg_pixel):
+                if(board.board[coord['y']][coord['x']+1] != board.bg_pixel and board.board[coord['y']][coord['x']+1] not in self.avoid_pixel):
                     # self.update_position(self.x-1, self.y)
                     self.update_velocity(-self.velocity_x, self.velocity_y)
                     board.brick_detect_and_remove(coord['x']+1, coord['y'])
@@ -115,7 +117,7 @@ class Ball():
                 self.update_velocity(self.velocity_x, -self.velocity_y)
                 return True
             elif coord['y'] > 0 and coord['x']>=0 and coord['x']<board.cols:
-                if(board.board[coord['y']-1][coord['x']] != board.bg_pixel):
+                if(board.board[coord['y']-1][coord['x']] != board.bg_pixel and board.board[coord['y']-1][coord['x']] not in self.avoid_pixel):
                     # self.update_position(self.x, self.y+1)
                     self.update_velocity(self.velocity_x, -self.velocity_y)
                     board.brick_detect_and_remove(coord['x'], coord['y']-1)
@@ -130,7 +132,7 @@ class Ball():
                 return True
             elif coord['y'] < board.rows-1 and coord['x']>=0 and coord['x']<board.cols:
                 # print("-->", board.board[coord['y']+1][coord['x']])
-                if(board.board[coord['y']+1][coord['x']] != board.bg_pixel):
+                if(board.board[coord['y']+1][coord['x']] != board.bg_pixel and board.board[coord['y']+1][coord['x']] not in self.avoid_pixel):
                     # self.update_position(self.x, self.y-1)
                     new_velocity_y = self.velocity_y
                     if(self.velocity_y>0):
