@@ -69,6 +69,13 @@ class Board():
 
         self.render()
 
+
+    def initialise(self):
+        self.balls = [Ball(random.randrange(self.paddle.x, self.paddle.x+self.paddle.width-2), self.rows-2)]
+        self.generated_powerups = []
+        self.active_powerups = []
+
+
     def spawn_powerups(self, brick):
         # probability = random.randint(1,101)
         probability = 15
@@ -164,14 +171,20 @@ class Board():
 
         # if collision update its position to collision location and update velocity
 
-        for ball in self.balls:
-            ball.move(self)
-            print("hii")
-            if ball in self.balls:
-                for row in range(ball.y, ball.y+ball.height):
-                    for col in range(ball.x, ball.x+ball.width):
-                        # print("->", (col, row))
-                        self.board[row][col] = ball.pixel
+        if(len(self.balls) == 0):
+            if(self.lives > 0):
+                self.initialise()
+                self.lives-=1
+
+        if(self.lives > 0):
+            for ball in self.balls:
+                ball.move(self)
+                print("hii")
+                if ball in self.balls:
+                    for row in range(ball.y, ball.y+ball.height):
+                        for col in range(ball.x, ball.x+ball.width):
+                            # print("->", (col, row))
+                            self.board[row][col] = ball.pixel
 
         # adding borders to board
         score_board_height = 4
