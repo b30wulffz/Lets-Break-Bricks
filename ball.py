@@ -24,6 +24,9 @@ class Ball():
         self.velocity_x = velocity_x
         self.velocity_y = velocity_y
 
+    def destroy_ball(self, balls):
+        balls.remove(self)
+
     def get_coordinates(self, direction):
         coordinates = []
         if(direction == "left"):
@@ -246,6 +249,7 @@ class Ball():
                             if y>=board.rows:
                                 self.update_velocity(self.velocity_x, -self.velocity_y)
                                 # delete ball
+                                self.destroy_ball(board.balls)
                                 break
                         else:
                             y = y-1  
@@ -311,6 +315,7 @@ class Ball():
                         elif(y>=board.rows):
                             self.update_velocity(self.velocity_x, -self.velocity_y)
                             # delete ball
+                            self.destroy_ball(board.balls)
                             break
                     else:
                         y = y-1

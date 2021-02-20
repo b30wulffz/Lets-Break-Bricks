@@ -15,7 +15,8 @@ class Board():
         # self.rows = 30
         self.rows = 34
         self.paddle = Paddle(self.cols//2 -12 , self.rows-1) # moving paddle to center
-        self.ball = Ball(random.randrange(self.paddle.x, self.paddle.x+self.paddle.width-2), self.rows-2) # moving ball on top of paddle at a random position
+        # self.ball = Ball(random.randrange(self.paddle.x, self.paddle.x+self.paddle.width-2), self.rows-2) # moving ball on top of paddle at a random position
+        self.balls = [Ball(random.randrange(self.paddle.x, self.paddle.x+self.paddle.width-2), self.rows-2)]# moving ball on top of paddle at a random position
         self.score = 0
         self.lives = 3
         self.bg_pixel = Back.BLACK+' '+Style.RESET_ALL
@@ -146,7 +147,6 @@ class Board():
 
         # updating distance based on velocity
         # self.ball.update_position(self.ball.x+self.ball.velocity_x, self.ball.y+self.ball.velocity_y)
-        self.ball.move(self)
 
         # checking for collisions
         
@@ -164,10 +164,14 @@ class Board():
 
         # if collision update its position to collision location and update velocity
 
-        for row in range(self.ball.y, self.ball.y+self.ball.height):
-            for col in range(self.ball.x, self.ball.x+self.ball.width):
-                # print("->", (col, row))
-                self.board[row][col] = self.ball.pixel
+        for ball in self.balls:
+            ball.move(self)
+            print("hii")
+            if ball in self.balls:
+                for row in range(ball.y, ball.y+ball.height):
+                    for col in range(ball.x, ball.x+ball.width):
+                        # print("->", (col, row))
+                        self.board[row][col] = ball.pixel
 
         # adding borders to board
         score_board_height = 4

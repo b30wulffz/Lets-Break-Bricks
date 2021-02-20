@@ -1,4 +1,5 @@
 from colorama import Fore, Back, Style 
+from time import time
 
 class PowerUP():
     def __init__(self, x, y, create_time):
@@ -54,6 +55,7 @@ class PowerUP():
                     # paddle detected
                     if(coord['y'] == board.paddle.y):
                         self.destroy_powerup(self, board.generated_powerups)
+                        self.create_time = time
                         board.active_powerups.append(self)
                         return True
         return False
