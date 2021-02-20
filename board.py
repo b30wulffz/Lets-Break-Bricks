@@ -3,6 +3,7 @@ from os import system
 from paddle import Paddle
 from ball import Ball
 from brick import EasyBrick, MediumBrick, HardBrick, UnbreakableBrick, SuperBrick
+from powerup import Expand_Paddle, Shrink_Paddle, Ball_Multiplier, Fast_Ball, Thru_Ball, Paddle_Grab
 import random
 from time import sleep,time
 import math
@@ -20,6 +21,8 @@ class Board():
         self.bg_pixel = Back.BLACK+' '+Style.RESET_ALL
         self.startTime = time()
         self.time = 0
+        self.generated_powerups = []
+        self.active_powerups = []
 
         # generate bricks
         ub = UnbreakableBrick(0,0)
@@ -65,6 +68,19 @@ class Board():
 
         self.render()
 
+    def spawn_powerups(self, brick):
+        # probability = random.randint(1,101)
+        probability = 15
+        
+        if(probability<20):
+            # powerup_choice = random.choice([1,2,3,4,5,6])
+            temp_powerup = Expand_Paddle(0,0,0)
+            powerup_choice = 1
+            if(powerup_choice == 1):
+                x = random.randint(brick.x, brick.x+brick.width-temp_powerup.width)
+                self.generated_powerups.append(Expand_Paddle(x, brick.y, time()))
+                
+
     def brick_detect_and_remove(self, x, y, forced=False):
         score = 0
         for brick in self.bricks:
@@ -77,6 +93,7 @@ class Board():
                     score = brick.reduce_health(True)
                     self.score += score
                     self.bricks.remove(brick)
+                    self.spawn_powerups(brick)
                     for y in range(brick.y-2, brick.y+brick.height-1+3):
                         for x in range(brick.x-4, brick.x+brick.width-1+4):
                             self.brick_detect_and_remove(x,y,True)
@@ -85,6 +102,7 @@ class Board():
                     if score > 0:
                         self.score += score
                         self.bricks.remove(brick)
+                        self.spawn_powerups(brick)
                 return True
         return False
 
@@ -112,6 +130,16 @@ class Board():
             for row in range(brick.y, brick.y+brick.height):
                 for col in range(brick.x, brick.x+brick.width):
                     self.board[row][col] = brick.pixel
+
+        # render powerup
+        for powerup in self.generated_powerups:
+            text = powerup.name
+            text_offset =powerup.x+ (powerup.width-len(text)) // 2
+            for row in range(powerup.y, powerup.y+powerup.height):
+                for col in range(powerup.x, powerup.x+powerup.width):
+                    self.board[row][col] = powerup.pixel
+            for j in range(0, len(text)):
+                self.board[powerup.y][text_offset+j] = Back.RED+Fore.WHITE+text[j]+Style.RESET_ALL
 
         # render ball
 
