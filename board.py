@@ -80,7 +80,6 @@ class Board():
                 x = random.randint(brick.x, brick.x+brick.width-temp_powerup.width)
                 self.generated_powerups.append(Expand_Paddle(x, brick.y, time()))
                 
-
     def brick_detect_and_remove(self, x, y, forced=False):
         score = 0
         for brick in self.bricks:
@@ -140,6 +139,8 @@ class Board():
                     self.board[row][col] = powerup.pixel
             for j in range(0, len(text)):
                 self.board[powerup.y][text_offset+j] = Back.RED+Fore.WHITE+text[j]+Style.RESET_ALL
+            
+            powerup.move(self)
 
         # render ball
 
