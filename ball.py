@@ -1,5 +1,5 @@
 from colorama import Fore, Back, Style 
-from powerup import Fast_Ball, Thru_Ball
+from powerup import Fast_Ball, Thru_Ball, Paddle_Grab
 
 class Ball():
 
@@ -17,6 +17,7 @@ class Ball():
         self.avoid_pixel = [Back.RED+Fore.WHITE+str(i)+Style.RESET_ALL for i in range(1,7)]
         self.avoid_pixel.append(self.pixel)
         self.thru_ball = False
+        self.hold = False
 
     def update_position(self, x, y):
         self.x = x
@@ -183,6 +184,8 @@ class Ball():
                             if(new_velocity_x > 2):
                                 new_velocity_x = 2
                         self.update_velocity(new_velocity_x, new_velocity_y)
+                        if(any(type(powerup) is Paddle_Grab for powerup in board.active_powerups) and not any(ball.hold == True for ball in board.balls)):
+                            self.hold = True
                     else:
                         self.update_velocity(self.velocity_x, new_velocity_y)
                         is_brick = board.brick_detect_and_remove(coord['x'], coord['y']+1, self.thru_ball)
@@ -193,6 +196,12 @@ class Ball():
 
     def move(self, board):
         # self.update_position(self.x+self.velocity_x, self.y+self.velocity_y)
+        if self.hold == True:
+            if(any(type(powerup) is Paddle_Grab for powerup in board.active_powerups)):
+                return
+            else:
+                self.hold = False
+
         self.thru_ball = any(type(powerup) is Thru_Ball for powerup in board.active_powerups)
 
         init_x = self.x

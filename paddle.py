@@ -31,7 +31,7 @@ class Paddle():
                 for ball in board.balls:
                     if(any((point["x"]>=self.x and point["x"]<=(self.x+self.width-1) and point["y"]+1==self.y) for point in ball.get_coordinates("bottom"))):
                         # for moving ball when kept on paddle
-                        if(ball.velocity_x == 0 and ball.velocity_y == 0):
+                        if(ball.velocity_x == 0 and ball.velocity_y == 0 or ball.hold):
                             ball.update_position(ball.x+2, ball.y)
                 self.x = self.x+2
             elif((self.x+self.width-1) < (board.cols-1)):
@@ -39,7 +39,7 @@ class Paddle():
                 for ball in board.balls:
                     if(any((point["x"]>=self.x and point["x"]<=(self.x+self.width-1) and point["y"]+1==self.y) for point in ball.get_coordinates("bottom"))):
                         # for moving ball when kept on paddle
-                        if(ball.velocity_x == 0 and ball.velocity_y == 0):
+                        if(ball.velocity_x == 0 and ball.velocity_y == 0 or ball.hold):
                             ball.update_position(ball.x+1, ball.y)
                 self.x = self.x+1
         elif(char == 'a'):
@@ -48,7 +48,7 @@ class Paddle():
                 for ball in board.balls:
                     if(any((point["x"]>=self.x and point["x"]<=(self.x+self.width-1) and point["y"]+1==self.y) for point in ball.get_coordinates("bottom"))):
                         # for moving ball when kept on paddle
-                        if(ball.velocity_x == 0 and ball.velocity_y == 0):
+                        if(ball.velocity_x == 0 and ball.velocity_y == 0 or ball.hold):
                             ball.update_position(ball.x-2, ball.y)
                 self.x = self.x-2
             elif (self.x > 0):
@@ -56,7 +56,7 @@ class Paddle():
                 for ball in board.balls:
                     if(any((point["x"]>=self.x and point["x"]<=(self.x+self.width-1) and point["y"]+1==self.y) for point in ball.get_coordinates("bottom"))):
                         # for moving ball when kept on paddle
-                        if(ball.velocity_x == 0 and ball.velocity_y == 0):
+                        if(ball.velocity_x == 0 and ball.velocity_y == 0 or ball.hold):
                             ball.update_position(ball.x-1, ball.y)
                 self.x = self.x-1
         # to launch the ball
@@ -67,5 +67,8 @@ class Paddle():
                     # for moving ball when kept on paddle
                     if(ball.velocity_x == 0 and ball.velocity_y == 0):
                         ball.update_velocity(random.choice([-1,1]), -1)
+                    if(ball.hold):
+                        ball.hold = False
+                            
         
         return char
