@@ -28,37 +28,57 @@ class Paddle():
         if(char == 'd'):
             if((self.x+self.width-1) < (board.cols-2)):
                 # check whether ball is touching the paddle
+                move = True
                 for ball in board.balls:
                     if(any((point["x"]>=self.x and point["x"]<=(self.x+self.width-1) and point["y"]+1==self.y) for point in ball.get_coordinates("bottom"))):
                         # for moving ball when kept on paddle
                         if(ball.velocity_x == 0 and ball.velocity_y == 0 or ball.hold):
-                            ball.update_position(ball.x+2, ball.y)
-                self.x = self.x+2
+                            if(ball.x+ball.width-1 < (board.cols-2)):
+                                ball.update_position(ball.x+2, ball.y)
+                            else:
+                                move = False
+                if(move):
+                    self.x = self.x+2
             elif((self.x+self.width-1) < (board.cols-1)):
                 # check whether ball is touching the paddle
+                move = True
                 for ball in board.balls:
                     if(any((point["x"]>=self.x and point["x"]<=(self.x+self.width-1) and point["y"]+1==self.y) for point in ball.get_coordinates("bottom"))):
                         # for moving ball when kept on paddle
                         if(ball.velocity_x == 0 and ball.velocity_y == 0 or ball.hold):
-                            ball.update_position(ball.x+1, ball.y)
-                self.x = self.x+1
+                            if(ball.x+ball.width-1 < (board.cols-1)):
+                                ball.update_position(ball.x+1, ball.y)
+                            else:
+                                move = False
+                if(move):
+                    self.x = self.x+1
         elif(char == 'a'):
             if(self.x > 1):
                 # check whether ball is touching the paddle
+                move = True
                 for ball in board.balls:
                     if(any((point["x"]>=self.x and point["x"]<=(self.x+self.width-1) and point["y"]+1==self.y) for point in ball.get_coordinates("bottom"))):
                         # for moving ball when kept on paddle
                         if(ball.velocity_x == 0 and ball.velocity_y == 0 or ball.hold):
-                            ball.update_position(ball.x-2, ball.y)
-                self.x = self.x-2
+                            if(ball.x > 1):
+                                ball.update_position(ball.x-2, ball.y)
+                            else:
+                                move = False
+                if(move):
+                    self.x = self.x-2
             elif (self.x > 0):
                 # check whether ball is touching the paddle
+                move = True
                 for ball in board.balls:
                     if(any((point["x"]>=self.x and point["x"]<=(self.x+self.width-1) and point["y"]+1==self.y) for point in ball.get_coordinates("bottom"))):
                         # for moving ball when kept on paddle
                         if(ball.velocity_x == 0 and ball.velocity_y == 0 or ball.hold):
-                            ball.update_position(ball.x-1, ball.y)
-                self.x = self.x-1
+                            if(ball.x > 0):
+                                ball.update_position(ball.x-1, ball.y)
+                            else:
+                                move = False
+                if(move):
+                    self.x = self.x-1
         # to launch the ball
         elif(char == 'w'):
             # check whether ball is touching the paddle

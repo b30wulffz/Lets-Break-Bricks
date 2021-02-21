@@ -14,7 +14,7 @@ class Board():
         self.cols = 84
         self.rows = 34
         self.paddle = Paddle(self.cols//2 -12 , self.rows-1) # moving paddle to center
-        self.balls = [Ball(random.randrange(self.paddle.x, self.paddle.x+self.paddle.initial_width-2), self.rows-2)]# moving ball on top of paddle at a random position
+        self.balls = [Ball(random.randrange(self.paddle.x, self.paddle.x+self.paddle.initial_width-2), self.rows-2)] # moving ball on top of paddle at a random position
         self.score = 0
         self.lives = 3
         self.bg_pixel = Back.BLACK+' '+Style.RESET_ALL
