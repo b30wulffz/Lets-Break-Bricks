@@ -15,7 +15,7 @@ There are 5 types of bricks:
 Here we are going to use Python 3:
 
 - In the directory, where game is stored, open the terminal and type `python main.py`.
-- Game will start.
+- Game will start, and the timer will start ticking.
 - Press `q` to quit the game.
 - Press `a` to move the paddle to the left.
 - Press `d` to move the paddle to the right.
@@ -24,10 +24,11 @@ Here we are going to use Python 3:
   - once all the bricks (except unbreakable bricks) are destroyed.
   - when all the lives are finished.
 - There are 3 lives per game.
-- A life is finished, when there are no balls left on the board.
+- A life is lost, when there are no balls left on the board.
 - A ball gets destoyed once it touches the bottom of the board.
 - Powerups can be collected by moving the paddle below the dropping powerup.
-- When a brick is destroyed, the score gets calculated by adding the points.
+- Powerups get reset when a life is lost.
+- When a brick is destroyed, its points are added in the score.
 - When the game gets over, you can see your total score and the total time elapsed.
 - If you want to replay the game after the game gets over, you need to quit the game, and then restart it using the first instruction.
 
