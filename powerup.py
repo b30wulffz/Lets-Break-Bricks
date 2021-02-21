@@ -77,6 +77,7 @@ class Ball_Multiplier(PowerUP):
         super().__init__(x, y, create_time)
         self.name="3"
         self.multiply_count=2
+        self.used = False
 
 class Fast_Ball(PowerUP):
     def __init__(self, x, y, create_time):

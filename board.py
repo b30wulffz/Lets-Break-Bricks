@@ -84,17 +84,16 @@ class Board():
         probability = 15
         
         if(probability<20):
-            # powerup_choice = random.choice([1,2,3,4,5,6])
+            powerup_choice = random.choice([1,2,3,4,5,6])
             temp_powerup = Expand_Paddle(0,0,0)
-            powerup_choice = random.choice([1,2])
+            x = random.randint(brick.x, brick.x+brick.width-temp_powerup.width)
             if(powerup_choice == 1):
-                x = random.randint(brick.x, brick.x+brick.width-temp_powerup.width)
                 self.generated_powerups.append(Expand_Paddle(x, brick.y, time()))
             elif(powerup_choice == 2):
-                x = random.randint(brick.x, brick.x+brick.width-temp_powerup.width)
                 self.generated_powerups.append(Shrink_Paddle(x, brick.y, time()))
+            elif(powerup_choice == 3):
+                self.generated_powerups.append(Ball_Multiplier(x, brick.y, time()))
             elif(powerup_choice == 4):
-                x = random.randint(brick.x, brick.x+brick.width-temp_powerup.width)
                 self.generated_powerups.append(Fast_Ball(x, brick.y, time()))
                 
     def brick_detect_and_remove(self, x, y, forced=False):
@@ -163,14 +162,22 @@ class Board():
         for powerup in self.active_powerups:
             if(math.floor(self.currentTime-powerup.create_time) >= powerup.expire_time):
                 powerup.destroy_powerup(powerup, self.active_powerups)
-
+                if(type(powerup) is Ball_Multiplier):
+                    # remove nearest ball from floor
+                    if(len(self.balls)>1):
+                        nearest_ball = self.balls[0]
+                        for ball in self.balls:
+                            if(nearest_ball.y < ball.y):
+                                nearest_ball=ball
+                        self.balls.remove(nearest_ball)
+                    
         # activate expand paddle
         expand_paddle_powerup = None
         for powerup in self.active_powerups:
             if(type(powerup) is Expand_Paddle):
                 expand_paddle_powerup = powerup
                 break
-            
+
         # activate shrink paddle
         shrink_paddle_powerup = None
         for powerup in self.active_powerups:
@@ -187,6 +194,24 @@ class Board():
         self.paddle.update_dimension(self.paddle.height, paddle_init_width)
         if(self.paddle.x+paddle_init_width >= self.cols):
             self.paddle.x -= self.paddle.x + paddle_init_width - self.cols
+
+        # activate ball multiplier
+        for powerup in self.active_powerups:
+            if(type(powerup) is Ball_Multiplier and powerup.used == False):                
+                # multiply farthest ball from floor
+                if(len(self.balls)>0):
+                    reference_ball = self.balls[0]
+                    for ball in self.balls:
+                        if(reference_ball.y > ball.y):
+                            reference_ball=ball
+                    new_ball = Ball(reference_ball.x, reference_ball.y)
+                    new_ball.velocity_y = reference_ball.velocity_y
+                    if(reference_ball.velocity_x == 0):
+                        new_ball.velocity_x = random.choice([-1,1])
+                    else:
+                        new_ball.velocity_x = -reference_ball.velocity_x
+                    self.balls.append(new_ball)
+                powerup.used = True
 
         # render ball
 
