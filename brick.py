@@ -64,3 +64,7 @@ class SuperBrick(Brick):
         self.health = 1
         self.pixel =  Back.BLUE+' '+Style.RESET_ALL
         self.score = 400
+
+    def reduce_health(self, forced=True):
+        self.health = 0
+        return self.score

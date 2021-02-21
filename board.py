@@ -51,20 +51,23 @@ class Board():
                 # print((x,y), end=" ")
             y+=ub.height+1
             # print()
-            if(y>=8):
-                    break
+            if(y>=12):
+                break
 
         if(len(self.bricks) > 6):
             ind = random.randint(2,6)
             self.bricks[ind] = UnbreakableBrick(self.bricks[ind].x, self.bricks[ind].y)
         if(len(self.bricks) > 20):
-            ind = random.randint(20,20)
+            ind = random.randint(18,20)
             self.bricks[ind] = UnbreakableBrick(self.bricks[ind].x, self.bricks[ind].y)
         if(len(self.bricks) > 38):
             ind = random.randint(35,38)
             self.bricks[ind] = UnbreakableBrick(self.bricks[ind].x, self.bricks[ind].y)
+        if(len(self.bricks) > 38):
+            ind = random.randint(60,62)
+            self.bricks[ind] = UnbreakableBrick(self.bricks[ind].x, self.bricks[ind].y)
             
-        ind = random.choice([13, 14, 29])
+        ind = random.choice([13, 24, 29, 37])
         if(len(self.bricks) > ind):
             self.bricks[ind] = SuperBrick(self.bricks[ind].x, self.bricks[ind].y)
         self.render()
@@ -113,7 +116,7 @@ class Board():
                     self.score += score
                     self.bricks.remove(brick)
                     self.spawn_powerups(brick)
-                    for y in range(brick.y-2, brick.y+brick.height-1+3):
+                    for y in range(brick.y-2-8, brick.y+brick.height-1+3+8):
                         for x in range(brick.x-4, brick.x+brick.width-1+4):
                             self.brick_detect_and_remove(x,y,True)
                 else:    
