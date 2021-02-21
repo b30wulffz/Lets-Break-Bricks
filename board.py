@@ -77,7 +77,6 @@ class Board():
 
     def spawn_powerups(self, brick):
         probability = random.randint(1,101)
-        # probability = 15
         
         if(probability<40):
             temp_powerup = Expand_Paddle(0,0,0)
