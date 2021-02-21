@@ -109,7 +109,7 @@ class Board():
                     self.score += score
                     self.bricks.remove(brick)
                     self.spawn_powerups(brick)
-                    for y in range(brick.y-2-8, brick.y+brick.height-1+3+8):
+                    for y in range(brick.y-2, brick.y+brick.height-1+3):
                         for x in range(brick.x-4, brick.x+brick.width-1+4):
                             self.brick_detect_and_remove(x,y,True)
                 else:    
