@@ -111,7 +111,6 @@ class Ball():
                 return True
             elif coord['x'] > 0 and coord['y']>=0 and coord['y']<board.rows:
                 if(board.board[coord['y']][coord['x']-1] != board.bg_pixel and board.board[coord['y']][coord['x']-1] not in self.avoid_pixel):
-                    # self.update_position(self.x+1, self.y)
                     self.update_velocity(-self.velocity_x, self.velocity_y)
                     is_brick = board.brick_detect_and_remove(coord['x']-1, coord['y'], self.thru_ball)
                     if self.thru_ball and is_brick:
@@ -126,7 +125,6 @@ class Ball():
                 return True
             elif coord['x'] < board.cols-1 and coord['y']>=0 and coord['y']<board.rows:
                 if(board.board[coord['y']][coord['x']+1] != board.bg_pixel and board.board[coord['y']][coord['x']+1] not in self.avoid_pixel):
-                    # self.update_position(self.x-1, self.y)
                     self.update_velocity(-self.velocity_x, self.velocity_y)
                     is_brick = board.brick_detect_and_remove(coord['x']+1, coord['y'], self.thru_ball)
                     if self.thru_ball and is_brick:
@@ -141,34 +139,28 @@ class Ball():
                 return True
             elif coord['y'] > 0 and coord['x']>=0 and coord['x']<board.cols:
                 if(board.board[coord['y']-1][coord['x']] != board.bg_pixel and board.board[coord['y']-1][coord['x']] not in self.avoid_pixel):
-                    # self.update_position(self.x, self.y+1)
                     self.update_velocity(self.velocity_x, -self.velocity_y)
                     is_brick = board.brick_detect_and_remove(coord['x'], coord['y']-1, self.thru_ball)
                     if self.thru_ball and is_brick:
                         self.update_velocity(self.velocity_x, -self.velocity_y)
                     return True
         
-        bottom_coordinates = self.get_coordinates("bottom")  # todo overflow check
+        bottom_coordinates = self.get_coordinates("bottom")
         for coord in bottom_coordinates:
             if coord['y'] >= board.rows:
                 self.update_position(self.x, board.rows-self.height-1)
                 self.update_velocity(self.velocity_x, -self.velocity_y)
-                # print("yyyyyyyyyyy")
                 return True
             elif coord['y'] < board.rows-1 and coord['x']>=0 and coord['x']<board.cols:
-                # print("-->", board.board[coord['y']+1][coord['x']])
                 if(board.board[coord['y']+1][coord['x']] != board.bg_pixel and board.board[coord['y']+1][coord['x']] not in self.avoid_pixel):
-                    # self.update_position(self.x, self.y-1)
                     new_velocity_y = self.velocity_y
                     if(self.velocity_y>0):
                         new_velocity_y = -self.velocity_y
                     # paddle detected
                     if(coord['y']+1 == board.paddle.y):
                         center_x = board.paddle.x+ (board.paddle.width-1)//2
-                        # print(board.paddle.x, board.paddle.width, coord['x'], (center_x, coord['y']+1))
                         factor = (coord['x']-center_x)
                         factor = factor*100 / ((board.paddle.width)//2)
-                        # print("->>>>", factor)
                         if(factor < 0):
                             if(factor<-50):
                                 new_velocity_x = self.velocity_x-2
@@ -195,7 +187,6 @@ class Ball():
         return False
 
     def move(self, board):
-        # self.update_position(self.x+self.velocity_x, self.y+self.velocity_y)
         if self.hold == True:
             if(any(type(powerup) is Paddle_Grab for powerup in board.active_powerups)):
                 return
@@ -209,8 +200,6 @@ class Ball():
         
         velocity_x = self.velocity_x
         velocity_y = self.velocity_y
-
-        # if(any(type(powerup) is Fast_Ball for powerup in board.active_powerups)):
 
         for powerup in board.active_powerups:
             if type(powerup) is Fast_Ball:
@@ -233,7 +222,6 @@ class Ball():
             else:
                 step = x_step // y_step
 
-
             if(minimum == 'x'):
                 x = self.x
                 i = 0
@@ -244,8 +232,6 @@ class Ball():
                     if i!=0:
                         self.update_position(x,y)
                         if self.check_collision(board) == True:
-                            # if x==init_y and y == init_y:
-                            #     self.update_position(x,y)
                             break
                     i+=1
                     if(i%step == 0 and x != final_x):
@@ -270,6 +256,7 @@ class Ball():
                         elif(y>=board.rows):
                             self.update_velocity(self.velocity_x, -self.velocity_y)
                             # delete ball
+                            self.destroy_ball(board.balls)
                             break
                     else:
                         y = y-1
@@ -303,7 +290,6 @@ class Ball():
                                 self.update_velocity(self.velocity_x, -self.velocity_y)
                                 break 
                         # check whether inside any object, or out of bound 
-
                         self.update_position(x,y)
                         if self.check_overlap_collision(board) == True:
                             break
@@ -325,7 +311,6 @@ class Ball():
             if(self.velocity_x !=0):
                 x = init_x
                 while True:
-                    # print((x,init_y))
                     # check top bottom left right
                     if x!= init_x:
                         self.update_position(x,init_y)
@@ -370,21 +355,3 @@ class Ball():
                         elif(y<0):
                             self.update_velocity(self.velocity_x, -self.velocity_y)
                             break
-        # print((self.x, self.y))
-        # for row in range(self.y, self.y+self.height):
-        #     for col in range(self.x, self.x+self.width):
-        #         board.board[row][col] = board.ball.pixel
-
-        # # left wall collision
-        # left_coordinates = self.get_coordinates("left")
-        # for coord in left_coordinates:
-        #     if coord['x'] < 0:
-        #         self.update_position(0, self.y)
-        #         self.update_velocity(-self.velocity_x, self.velocity_y)
-        #         break
-        #     elif coord['x'] > 0:
-        #         if(board.board[coord['y']][coord['x']-1] != board.bg_pixel):
-        #             self.update_velocity(-self.velocity_x, self.velocity_y)
-        #     #     break
-                
-        # right wall collision

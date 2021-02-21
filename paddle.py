@@ -68,7 +68,6 @@ class Paddle():
                     if(ball.velocity_x == 0 and ball.velocity_y == 0):
                         ball.update_velocity(random.choice([-1,1]), -1)
                     if(ball.hold):
-                        ball.hold = False
-                            
+                        ball.hold = False                   
         
         return char

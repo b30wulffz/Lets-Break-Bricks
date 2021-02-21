@@ -10,5 +10,3 @@ while(True):
         break
     if board.render() == True:
         break
-
-# board.ball.move(board)

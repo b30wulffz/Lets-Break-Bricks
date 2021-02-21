@@ -12,10 +12,8 @@ class Board():
 
     def __init__(self, balls=[]):
         self.cols = 84
-        # self.rows = 30
         self.rows = 34
         self.paddle = Paddle(self.cols//2 -12 , self.rows-1) # moving paddle to center
-        # self.ball = Ball(random.randrange(self.paddle.x, self.paddle.x+self.paddle.width-2), self.rows-2) # moving ball on top of paddle at a random position
         self.balls = [Ball(random.randrange(self.paddle.x, self.paddle.x+self.paddle.initial_width-2), self.rows-2)]# moving ball on top of paddle at a random position
         self.score = 0
         self.lives = 3
@@ -33,10 +31,7 @@ class Board():
         self.bricks = []
 
         while True:
-            # if (y-1)%4 == 0:
             x = random.choice([1, ub.width//2, ub.width//2 + 1])
-            
-                # x = 
             while True:
                 if((x+ub.width)>=self.cols):
                     break
@@ -48,9 +43,7 @@ class Board():
                 else:
                     self.bricks.append(HardBrick(x,y))
                 x+=ub.width+1
-                # print((x,y), end=" ")
             y+=ub.height+1
-            # print()
             if(y>=12):
                 break
 
@@ -131,16 +124,6 @@ class Board():
     def render(self):
         system('clear')
         self.board = [[self.bg_pixel for i in range(self.cols)] for j in range(self.rows)]
-        # print(len(self.board[0]))
-        # self.board = []
-        # for j in range(self.rows+2):
-        #     row = []
-        #     for i in range(self.cols+2):
-        #         if(i==0 or i==self.cols+1):
-        #             row.append('|')
-        #         else:
-        #             row.append('.')
-        #     self.board.append(row)
 
         # render paddle
         for row in range(self.paddle.y, self.paddle.y+self.paddle.height):
@@ -221,26 +204,6 @@ class Board():
                 powerup.used = True
 
         # render ball
-
-        # updating distance based on velocity
-        # self.ball.update_position(self.ball.x+self.ball.velocity_x, self.ball.y+self.ball.velocity_y)
-
-        # checking for collisions
-        
-        # left wall collision
-
-        # right wall collision
-
-        # top wall collision
-
-        # bottom wall collision
-
-        # paddle collision
-
-        # brick collision
-
-        # if collision update its position to collision location and update velocity
-
         if(len(self.balls) == 0):
             if(self.lives > 0):
                 self.initialise()
@@ -267,7 +230,6 @@ class Board():
         border_pixel = Back.BLUE+' '+Style.RESET_ALL
 
         self.output = [[border_pixel for i in range(self.cols+2*wall)] for j in range(score_board_height+self.rows+2*wall)]
-        # self.output.extend([[border_pixel for i in range(self.cols+2*wall)] for j in range(self.rows+2*wall)])
 
         title = "Lets Break Bricks"
         title_offset = (self.cols+wall-len(title)) // 2
