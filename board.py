@@ -21,9 +21,10 @@ class Board():
         self.lives = 3
         self.bg_pixel = Back.BLACK+' '+Style.RESET_ALL
         self.startTime = time()
-        self.time = 0
+        self.currentTime = time()
         self.generated_powerups = []
         self.active_powerups = []
+        self.game_over = False
 
         # generate bricks
         ub = UnbreakableBrick(0,0)
@@ -66,7 +67,6 @@ class Board():
         ind = random.choice([13, 14, 29])
         if(len(self.bricks) > ind):
             self.bricks[ind] = SuperBrick(self.bricks[ind].x, self.bricks[ind].y)
-
         self.render()
 
 
@@ -176,15 +176,20 @@ class Board():
                 self.initialise()
                 self.lives-=1
 
-        if(self.lives > 0):
+        if(self.lives > 0 and self.game_over == False):
             for ball in self.balls:
                 ball.move(self)
-                print("hii")
                 if ball in self.balls:
                     for row in range(ball.y, ball.y+ball.height):
                         for col in range(ball.x, ball.x+ball.width):
                             # print("->", (col, row))
                             self.board[row][col] = ball.pixel
+        else: 
+            self.game_over = True
+
+        if(not any((type(brick) is not UnbreakableBrick) for brick in self.bricks)): 
+            self.game_over = True
+
 
         # adding borders to board
         score_board_height = 4
@@ -203,8 +208,8 @@ class Board():
         score_text_offset = (self.cols+wall-len(score_text)) // 8
         for j in range(0, len(score_text)):
             self.output[3][score_text_offset+j] = Back.BLUE+Fore.RED+score_text[j]+Style.RESET_ALL
-
-        time_elpsed = math.floor(time()-self.startTime)
+        
+        time_elpsed = math.floor(self.currentTime-self.startTime)
         time_taken = "Time: {} seconds".format(time_elpsed)
         time_taken_offset = (self.cols+wall-len(time_taken)) * 4 //8
         for j in range(0, len(time_taken)):
@@ -220,7 +225,7 @@ class Board():
                 self.output[j+score_board_height+wall][i+wall] = self.board[j][i]
 
         
-        if self.lives == 0:
+        if self.game_over == True:
             game_over_screen_height = 7
             game_over_screen_width = self.cols//2
             self.game_over_screen = [[border_pixel for i in range(game_over_screen_width)] for j in range(game_over_screen_height)]
@@ -247,6 +252,6 @@ class Board():
                     self.output[height_offset+row][width_offset+col] = self.game_over_screen[row][col]
 
         print("\n".join(["".join(row) for row in self.output]))
-        
-        if(self.lives == 0):
-            return True
+
+        if(self.game_over ==  False):
+            self.currentTime = time()
