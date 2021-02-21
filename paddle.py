@@ -8,6 +8,8 @@ class Paddle():
         self.x = x
         self.y = y
         
+        self.initial_width = 30
+
         self.height = 1
         self.width = 30
 
@@ -17,7 +19,7 @@ class Paddle():
         self.x = x
         self.y = y
 
-    def update_dimension(self, height=1, width=10):
+    def update_dimension(self, height=1, width=30):
         self.height = height
         self.width = width
 

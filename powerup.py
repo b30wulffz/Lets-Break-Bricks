@@ -64,13 +64,13 @@ class Expand_Paddle(PowerUP):
     def __init__(self, x, y, create_time):
         super().__init__(x, y, create_time)
         self.name="1"
-        self.expand_size=2
+        self.expand_size=6
 
 class Shrink_Paddle(PowerUP):
     def __init__(self, x, y, create_time):
         super().__init__(x, y, create_time)
         self.name="2"
-        self.shrink_size=2
+        self.shrink_size=6
 
 class Ball_Multiplier(PowerUP):
     def __init__(self, x, y, create_time):
@@ -84,7 +84,7 @@ class Fast_Ball(PowerUP):
         self.name="4"
         self.fast_factor_x=2
         self.fast_factor_y=2
-        self.expire_time = 3
+        self.expire_time = 5
 
 class Thru_Ball(PowerUP):
     def __init__(self, x, y, create_time):

@@ -16,7 +16,7 @@ class Board():
         self.rows = 34
         self.paddle = Paddle(self.cols//2 -12 , self.rows-1) # moving paddle to center
         # self.ball = Ball(random.randrange(self.paddle.x, self.paddle.x+self.paddle.width-2), self.rows-2) # moving ball on top of paddle at a random position
-        self.balls = [Ball(random.randrange(self.paddle.x, self.paddle.x+self.paddle.width-2), self.rows-2)]# moving ball on top of paddle at a random position
+        self.balls = [Ball(random.randrange(self.paddle.x, self.paddle.x+self.paddle.initial_width-2), self.rows-2)]# moving ball on top of paddle at a random position
         self.score = 0
         self.lives = 3
         self.bg_pixel = Back.BLACK+' '+Style.RESET_ALL
@@ -71,7 +71,10 @@ class Board():
 
 
     def initialise(self):
-        self.balls = [Ball(random.randrange(self.paddle.x, self.paddle.x+self.paddle.width-2), self.rows-2)]
+        self.paddle.update_dimension(self.paddle.height, self.paddle.initial_width)
+        if(self.paddle.x+self.paddle.initial_width-1 >=self.cols):
+            self.paddle.x -= self.paddle.x + self.paddle.initial_width - self.cols
+        self.balls = [Ball(random.randrange(self.paddle.x, self.paddle.x+self.paddle.initial_width-2), self.rows-2)]
         self.generated_powerups = []
         self.active_powerups = []
 
@@ -83,10 +86,13 @@ class Board():
         if(probability<20):
             # powerup_choice = random.choice([1,2,3,4,5,6])
             temp_powerup = Expand_Paddle(0,0,0)
-            powerup_choice = 4
+            powerup_choice = random.choice([1,2])
             if(powerup_choice == 1):
                 x = random.randint(brick.x, brick.x+brick.width-temp_powerup.width)
                 self.generated_powerups.append(Expand_Paddle(x, brick.y, time()))
+            elif(powerup_choice == 2):
+                x = random.randint(brick.x, brick.x+brick.width-temp_powerup.width)
+                self.generated_powerups.append(Shrink_Paddle(x, brick.y, time()))
             elif(powerup_choice == 4):
                 x = random.randint(brick.x, brick.x+brick.width-temp_powerup.width)
                 self.generated_powerups.append(Fast_Ball(x, brick.y, time()))
@@ -155,9 +161,32 @@ class Board():
 
         # deactivate powerup after a fixed time interval
         for powerup in self.active_powerups:
-            print(powerup.create_time)
             if(math.floor(self.currentTime-powerup.create_time) >= powerup.expire_time):
                 powerup.destroy_powerup(powerup, self.active_powerups)
+
+        # activate expand paddle
+        expand_paddle_powerup = None
+        for powerup in self.active_powerups:
+            if(type(powerup) is Expand_Paddle):
+                expand_paddle_powerup = powerup
+                break
+            
+        # activate shrink paddle
+        shrink_paddle_powerup = None
+        for powerup in self.active_powerups:
+            if(type(powerup) is Shrink_Paddle):
+                shrink_paddle_powerup = powerup
+                break
+        
+        paddle_init_width = self.paddle.initial_width
+        if(expand_paddle_powerup is not None):
+            paddle_init_width += expand_paddle_powerup.expand_size 
+        if(shrink_paddle_powerup is not None):
+            paddle_init_width -= shrink_paddle_powerup.shrink_size 
+        
+        self.paddle.update_dimension(self.paddle.height, paddle_init_width)
+        if(self.paddle.x+paddle_init_width >= self.cols):
+            self.paddle.x -= self.paddle.x + paddle_init_width - self.cols
 
         # render ball
 
