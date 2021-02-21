@@ -84,8 +84,8 @@ class Board():
         probability = 15
         
         if(probability<20):
-            powerup_choice = random.choice([1,2,3,4,5,6])
             temp_powerup = Expand_Paddle(0,0,0)
+            powerup_choice = random.choice([1,2,3,4,5,6])
             x = random.randint(brick.x, brick.x+brick.width-temp_powerup.width)
             if(powerup_choice == 1):
                 self.generated_powerups.append(Expand_Paddle(x, brick.y, time()))
@@ -95,6 +95,8 @@ class Board():
                 self.generated_powerups.append(Ball_Multiplier(x, brick.y, time()))
             elif(powerup_choice == 4):
                 self.generated_powerups.append(Fast_Ball(x, brick.y, time()))
+            elif(powerup_choice == 5):
+                self.generated_powerups.append(Thru_Ball(x, brick.y, time()))
                 
     def brick_detect_and_remove(self, x, y, forced=False):
         score = 0
