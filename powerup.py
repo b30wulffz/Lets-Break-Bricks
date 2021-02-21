@@ -55,7 +55,7 @@ class PowerUP():
                     # paddle detected
                     if(coord['y'] == board.paddle.y):
                         self.destroy_powerup(self, board.generated_powerups)
-                        self.create_time = time
+                        self.create_time = time()
                         board.active_powerups.append(self)
                         return True
         return False
@@ -84,6 +84,7 @@ class Fast_Ball(PowerUP):
         self.name="4"
         self.fast_factor_x=2
         self.fast_factor_y=2
+        self.expire_time = 3
 
 class Thru_Ball(PowerUP):
     def __init__(self, x, y, create_time):

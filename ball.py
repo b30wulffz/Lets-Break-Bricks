@@ -1,4 +1,5 @@
 from colorama import Fore, Back, Style 
+from powerup import Fast_Ball
 
 class Ball():
 
@@ -172,8 +173,20 @@ class Ball():
         # self.update_position(self.x+self.velocity_x, self.y+self.velocity_y)
         init_x = self.x
         init_y = self.y
-        final_x = self.x+self.velocity_x
-        final_y = self.y+self.velocity_y
+        
+        velocity_x = self.velocity_x
+        velocity_y = self.velocity_y
+
+        # if(any(type(powerup) is Fast_Ball for powerup in board.active_powerups)):
+
+        for powerup in board.active_powerups:
+            if type(powerup) is Fast_Ball:
+                velocity_x *= powerup.fast_factor_x
+                velocity_y *= powerup.fast_factor_y
+                break
+
+        final_x = self.x+velocity_x
+        final_y = self.y+velocity_y
 
         if(self.velocity_x != 0 and self.velocity_y != 0):
             x_step = abs(final_x-self.x) + 1

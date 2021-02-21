@@ -83,10 +83,13 @@ class Board():
         if(probability<20):
             # powerup_choice = random.choice([1,2,3,4,5,6])
             temp_powerup = Expand_Paddle(0,0,0)
-            powerup_choice = 1
+            powerup_choice = 4
             if(powerup_choice == 1):
                 x = random.randint(brick.x, brick.x+brick.width-temp_powerup.width)
                 self.generated_powerups.append(Expand_Paddle(x, brick.y, time()))
+            elif(powerup_choice == 4):
+                x = random.randint(brick.x, brick.x+brick.width-temp_powerup.width)
+                self.generated_powerups.append(Fast_Ball(x, brick.y, time()))
                 
     def brick_detect_and_remove(self, x, y, forced=False):
         score = 0
@@ -149,6 +152,12 @@ class Board():
                 self.board[powerup.y][text_offset+j] = Back.RED+Fore.WHITE+text[j]+Style.RESET_ALL
             
             powerup.move(self)
+
+        # deactivate powerup after a fixed time interval
+        for powerup in self.active_powerups:
+            print(powerup.create_time)
+            if(math.floor(self.currentTime-powerup.create_time) >= powerup.expire_time):
+                powerup.destroy_powerup(powerup, self.active_powerups)
 
         # render ball
 
