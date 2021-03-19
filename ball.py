@@ -176,8 +176,13 @@ class Ball():
                             if(new_velocity_x > 2):
                                 new_velocity_x = 2
                         self.update_velocity(new_velocity_x, new_velocity_y)
+                        # shift bricks after certain time interval when ball hits the paddle
+                        if board.game_over == False: 
+                            board.shift_bricks()
+                        
                         if(any(type(powerup) is Paddle_Grab for powerup in board.active_powerups) and not any(ball.hold == True for ball in board.balls)):
                             self.hold = True
+                        
                     else:
                         self.update_velocity(self.velocity_x, new_velocity_y)
                         is_brick = board.brick_detect_and_remove(coord['x'], coord['y']+1, self.thru_ball)

@@ -102,11 +102,11 @@ class Board():
                 self.game_over = True
 
     def shift_bricks(self):
-        cutoff = 500
+        cutoff = 600
         if self.level == 2:
-            cutoff = 200
+            cutoff = 400
         elif self.level == 3:
-            cutoff = 300
+            cutoff = 500
         if self.ticks > cutoff:
             for brick in self.bricks:
                 brick.y += 1
@@ -216,14 +216,11 @@ class Board():
         else: 
             self.game_over = True
 
-        # shift bricks after some time
-        self.shift_brick_collision() # check for brick paddle collision
-        if self.game_over == False:
-            self.shift_bricks()
+        # check for brick paddle collision
+        self.shift_brick_collision() 
 
-        # when no bricks are left
+        # check for the case when no bricks are left
         self.no_bricks_left()
-
 
         # adding borders to board
         score_board_height = 4
