@@ -1,4 +1,6 @@
 from colorama import Fore, Back, Style 
+from time import sleep
+import random
 
 class Brick():
     
@@ -9,8 +11,11 @@ class Brick():
         self.width = 6   
         self.health = -1
         self.score = 0
+        self.is_rainbow = False
 
     def reduce_health(self, forced=False):
+        if self.is_rainbow == True:
+            self.is_rainbow = False
         if(forced == True):
             self.health = 0
             return self.score
@@ -24,6 +29,21 @@ class Brick():
                 elif(self.health == 0):
                     return self.score
         return 0
+
+    def trigger_rainbow(self):
+        if self.is_rainbow == True:
+            health_values = list(filter(lambda x: x != self.health, [1,2,3]))
+            health = random.choice(health_values)
+            self.health = health
+            if self.health == 1:
+                self.pixel =  Back.YELLOW+' '+Style.RESET_ALL
+                self.score = 100
+            elif self.health == 2:
+                self.pixel =  Back.CYAN+' '+Style.RESET_ALL
+                self.score = 200
+            elif self.health == 3:
+                self.pixel =  Back.MAGENTA+' '+Style.RESET_ALL
+                self.score = 300
 
 class EasyBrick(Brick):
 

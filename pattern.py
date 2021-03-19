@@ -1,5 +1,6 @@
 from brick import EasyBrick, MediumBrick, HardBrick, UnbreakableBrick, SuperBrick
 import random
+from time import sleep
 
 class Pattern():
 
@@ -45,6 +46,12 @@ class Pattern():
         if(len(bricks) > ind):
             bricks[ind] = SuperBrick(bricks[ind].x, bricks[ind].y)
 
+        # for rainbow brick
+        filtered_bricks = list(filter(lambda x: type(x) not in [UnbreakableBrick, SuperBrick], bricks))
+        
+        for brick in random.sample(filtered_bricks, random.randint(4,8)):
+            brick.is_rainbow = True
+        
         return bricks
 
     @staticmethod
@@ -91,7 +98,13 @@ class Pattern():
         ind = random.choice([13, 24, 29, 37])
         if(len(bricks) > ind):
             bricks[ind] = SuperBrick(bricks[ind].x, bricks[ind].y)
-
+        
+        # for rainbow brick
+        filtered_bricks = list(filter(lambda x: type(x) not in [UnbreakableBrick, SuperBrick], bricks))
+        
+        for brick in random.sample(filtered_bricks, random.randint(4,8)):
+            brick.is_rainbow = True
+        
         return bricks
 
     
@@ -139,6 +152,12 @@ class Pattern():
         ind = random.choice([13, 24, 29, 37])
         if(len(bricks) > ind):
             bricks[ind] = SuperBrick(bricks[ind].x, bricks[ind].y)
+        
+        # for rainbow brick
+        filtered_bricks = list(filter(lambda x: type(x) not in [UnbreakableBrick, SuperBrick], bricks))
+        
+        for brick in random.sample(filtered_bricks, random.randint(4,8)):
+            brick.is_rainbow = True
         
         return bricks
 

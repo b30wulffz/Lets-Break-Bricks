@@ -128,6 +128,8 @@ class Board():
 
         # render bricks
         for brick in self.bricks:
+            if (self.ticks % 4) == 0:
+                brick.trigger_rainbow()
             for row in range(brick.y, brick.y+brick.height):
                 for col in range(brick.x, brick.x+brick.width):
                     self.board[row][col] = brick.pixel
