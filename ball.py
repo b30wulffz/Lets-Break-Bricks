@@ -52,13 +52,15 @@ class Ball():
         return coordinates
     
     def check_overlap_collision(self, board):
+        init_velocities = [self.velocity_x, self.velocity_y]
+
         left_coord = self.get_coordinates("left")
         for coord in left_coord:
             if(coord['y']>=0 and coord['y']<board.rows and coord['x']>=0 and coord['x']<board.cols):
                 if(board.board[coord['y']][coord['x']] != board.bg_pixel and board.board[coord['y']][coord['x']] not in self.avoid_pixel):
                     self.update_position(self.x+1, self.y)
                     self.update_velocity(-self.velocity_x, self.velocity_y)
-                    is_brick = board.brick_detect_and_remove(coord['x'], coord['y'], self.thru_ball)
+                    is_brick = board.brick_detect_and_remove(coord['x'], coord['y'], self.thru_ball, velocities=init_velocities)
                     if self.thru_ball and is_brick:
                         self.update_position(self.x-1, self.y)
                         self.update_velocity(-self.velocity_x, self.velocity_y)
@@ -72,7 +74,7 @@ class Ball():
                 if(board.board[coord['y']][coord['x']] != board.bg_pixel and board.board[coord['y']][coord['x']] not in self.avoid_pixel):
                     self.update_position(self.x-1, self.y)
                     self.update_velocity(-self.velocity_x, self.velocity_y)
-                    is_brick = board.brick_detect_and_remove(coord['x'], coord['y'], self.thru_ball)
+                    is_brick = board.brick_detect_and_remove(coord['x'], coord['y'], self.thru_ball, velocities=init_velocities)
                     if self.thru_ball and is_brick:
                         self.update_position(self.x+1, self.y)
                         self.update_velocity(-self.velocity_x, self.velocity_y)
@@ -84,7 +86,7 @@ class Ball():
                 if(board.board[coord['y']][coord['x']] != board.bg_pixel and board.board[coord['y']][coord['x']] not in self.avoid_pixel):
                     self.update_position(self.x, self.y+1)
                     self.update_velocity(self.velocity_x, -self.velocity_y)
-                    is_brick = board.brick_detect_and_remove(coord['x'], coord['y'], self.thru_ball)
+                    is_brick = board.brick_detect_and_remove(coord['x'], coord['y'], self.thru_ball, velocities=init_velocities)
                     if self.thru_ball and is_brick:
                         self.update_position(self.x, self.y-1)
                         self.update_velocity(self.velocity_x, -self.velocity_y)
@@ -96,7 +98,7 @@ class Ball():
                 if(board.board[coord['y']][coord['x']] != board.bg_pixel and board.board[coord['y']][coord['x']] not in self.avoid_pixel):
                     self.update_position(self.x, self.y-1)
                     self.update_velocity(self.velocity_x, -self.velocity_y)
-                    is_brick = board.brick_detect_and_remove(coord['x'], coord['y'], self.thru_ball)
+                    is_brick = board.brick_detect_and_remove(coord['x'], coord['y'], self.thru_ball, velocities=init_velocities)
                     if self.thru_ball and is_brick:
                         self.update_position(self.x, self.y+1)
                         self.update_velocity(self.velocity_x, -self.velocity_y)
@@ -104,6 +106,8 @@ class Ball():
         return False
 
     def check_collision(self, board):
+        init_velocities = [self.velocity_x, self.velocity_y]
+        
         left_coordinates = self.get_coordinates("left")  
         for coord in left_coordinates:
             if coord['x'] < 0:
@@ -113,7 +117,7 @@ class Ball():
             elif coord['x'] > 0 and coord['y']>=0 and coord['y']<board.rows:
                 if(board.board[coord['y']][coord['x']-1] != board.bg_pixel and board.board[coord['y']][coord['x']-1] not in self.avoid_pixel):
                     self.update_velocity(-self.velocity_x, self.velocity_y)
-                    is_brick = board.brick_detect_and_remove(coord['x']-1, coord['y'], self.thru_ball)
+                    is_brick = board.brick_detect_and_remove(coord['x']-1, coord['y'], self.thru_ball, velocities=init_velocities)
                     if self.thru_ball and is_brick:
                         self.update_velocity(-self.velocity_x, self.velocity_y)
                     return True
@@ -127,7 +131,7 @@ class Ball():
             elif coord['x'] < board.cols-1 and coord['y']>=0 and coord['y']<board.rows:
                 if(board.board[coord['y']][coord['x']+1] != board.bg_pixel and board.board[coord['y']][coord['x']+1] not in self.avoid_pixel):
                     self.update_velocity(-self.velocity_x, self.velocity_y)
-                    is_brick = board.brick_detect_and_remove(coord['x']+1, coord['y'], self.thru_ball)
+                    is_brick = board.brick_detect_and_remove(coord['x']+1, coord['y'], self.thru_ball, velocities=init_velocities)
                     if self.thru_ball and is_brick:
                         self.update_velocity(-self.velocity_x, self.velocity_y)
                     return True
@@ -141,7 +145,7 @@ class Ball():
             elif coord['y'] > 0 and coord['x']>=0 and coord['x']<board.cols:
                 if(board.board[coord['y']-1][coord['x']] != board.bg_pixel and board.board[coord['y']-1][coord['x']] not in self.avoid_pixel):
                     self.update_velocity(self.velocity_x, -self.velocity_y)
-                    is_brick = board.brick_detect_and_remove(coord['x'], coord['y']-1, self.thru_ball)
+                    is_brick = board.brick_detect_and_remove(coord['x'], coord['y']-1, self.thru_ball, velocities=init_velocities)
                     if self.thru_ball and is_brick:
                         self.update_velocity(self.velocity_x, -self.velocity_y)
                     return True
@@ -186,7 +190,7 @@ class Ball():
                         
                     else:
                         self.update_velocity(self.velocity_x, new_velocity_y)
-                        is_brick = board.brick_detect_and_remove(coord['x'], coord['y']+1, self.thru_ball)
+                        is_brick = board.brick_detect_and_remove(coord['x'], coord['y']+1, self.thru_ball, velocities=init_velocities)
                         if self.thru_ball and is_brick:
                             self.update_velocity(self.velocity_x, -self.velocity_y)
                     return True

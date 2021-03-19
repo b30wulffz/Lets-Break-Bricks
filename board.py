@@ -48,31 +48,37 @@ class Board():
         self.paddle.bullets = []
 
 
-    def spawn_powerups(self, brick):
+    def spawn_powerups(self, brick, velocities):
         probability = random.randint(1,101)
         
         if(probability<40):
-            temp_powerup = Expand_Paddle(0,0,0)
+            temp_powerup = Expand_Paddle(0,0,0,0,1)
             powerup_choice = random.choice([1,2,3,4,5,6,7,8])
+            if velocities is not None:
+                vel_x = velocities[0]
+                vel_y = velocities[1]
+            else:
+                vel_x = 0
+                vel_y = 1
             x = random.randint(brick.x, brick.x+brick.width-temp_powerup.width)
             if(powerup_choice == 1):
-                self.generated_powerups.append(Expand_Paddle(x, brick.y, time()))
+                self.generated_powerups.append(Expand_Paddle(x, brick.y, time(), vel_x, vel_y))
             elif(powerup_choice == 2):
-                self.generated_powerups.append(Shrink_Paddle(x, brick.y, time()))
+                self.generated_powerups.append(Shrink_Paddle(x, brick.y, time(), vel_x, vel_y))
             elif(powerup_choice == 3):
-                self.generated_powerups.append(Ball_Multiplier(x, brick.y, time()))
+                self.generated_powerups.append(Ball_Multiplier(x, brick.y, time(), vel_x, vel_y))
             elif(powerup_choice == 4):
-                self.generated_powerups.append(Fast_Ball(x, brick.y, time()))
+                self.generated_powerups.append(Fast_Ball(x, brick.y, time(), vel_x, vel_y))
             elif(powerup_choice == 5):
-                self.generated_powerups.append(Thru_Ball(x, brick.y, time()))
+                self.generated_powerups.append(Thru_Ball(x, brick.y, time(), vel_x, vel_y))
             elif(powerup_choice == 6):
-                self.generated_powerups.append(Paddle_Grab(x, brick.y, time()))
+                self.generated_powerups.append(Paddle_Grab(x, brick.y, time(), vel_x, vel_y))
             elif(powerup_choice == 7):
-                self.generated_powerups.append(Shooting_Paddle(x, brick.y, time()))
+                self.generated_powerups.append(Shooting_Paddle(x, brick.y, time(), vel_x, vel_y))
             elif(powerup_choice == 8):
-                self.generated_powerups.append(Fireball(x, brick.y, time()))
+                self.generated_powerups.append(Fireball(x, brick.y, time(), vel_x, vel_y))
                 
-    def brick_detect_and_remove(self, x, y, forced=False, fireball_trigger=False):
+    def brick_detect_and_remove(self, x, y, forced=False, fireball_trigger=False, velocities=None):
         score = 0
         fireball_powerup = None
         for powerup in self.active_powerups:
@@ -90,7 +96,7 @@ class Board():
                     self.score += score
                     self.bricks.remove(brick)
                     if brick.is_bosslayer == False:
-                        self.spawn_powerups(brick)
+                        self.spawn_powerups(brick, velocities)
                     for y in range(brick.y-2, brick.y+brick.height-1+3):
                         for x in range(brick.x-4, brick.x+brick.width-1+4):
                             self.brick_detect_and_remove(x,y,True,True)
@@ -100,7 +106,7 @@ class Board():
                         self.score += score
                         self.bricks.remove(brick)
                         if brick.is_bosslayer == False:
-                            self.spawn_powerups(brick)
+                            self.spawn_powerups(brick, velocities)
                 return True
         # check for boss
         if self.boss is not None:
@@ -173,8 +179,8 @@ class Board():
                     self.board[row][col] = powerup.pixel
             for j in range(0, len(text)):
                 self.board[powerup.y][text_offset+j] = Back.RED+Fore.WHITE+text[j]+Style.RESET_ALL
-            
             powerup.move(self)
+            
 
         # deactivate powerup after a fixed time interval
         for powerup in self.active_powerups:
