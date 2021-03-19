@@ -17,7 +17,7 @@ class Board():
         self.paddle = Paddle(self.cols//2 -12 , self.rows-1) # moving paddle to center
         self.balls = [Ball(random.randrange(self.paddle.x, self.paddle.x+self.paddle.initial_width-2), self.rows-2)] # moving ball on top of paddle at a random position
         self.score = 0
-        self.lives = 3
+        self.lives = 10
         self.bg_pixel = Back.BLACK+' '+Style.RESET_ALL
         self.startTime = time()
         self.currentTime = time()
@@ -110,13 +110,11 @@ class Board():
         if self.ticks > cutoff:
             for brick in self.bricks:
                 brick.y += 1
+                # check for brick paddle collision
+                if brick.y >= self.paddle.y-1:
+                    self.game_over = True
             self.ticks = 0
     
-    def shift_brick_collision(self):
-        for brick in self.bricks:
-            if brick.y >= self.paddle.y-1:
-                self.game_over = True
-
     def render(self):
         system('clear')
         self.board = [[self.bg_pixel for i in range(self.cols)] for j in range(self.rows)]
@@ -217,9 +215,6 @@ class Board():
                             self.board[row][col] = ball.pixel
         else: 
             self.game_over = True
-
-        # check for brick paddle collision
-        self.shift_brick_collision() 
 
         # check for the case when no bricks are left
         self.no_bricks_left()
