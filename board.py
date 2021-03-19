@@ -25,6 +25,7 @@ class Board():
         self.active_powerups = []
         self.game_over = False
         self.level = 1
+        self.ticks = 0
 
         # generate bricks
         ub = UnbreakableBrick(0,0)
@@ -98,6 +99,22 @@ class Board():
                 self.level+=1
                 self.initialise()
             else:
+                self.game_over = True
+
+    def shift_bricks(self):
+        cutoff = 500
+        if self.level == 2:
+            cutoff = 200
+        elif self.level == 3:
+            cutoff = 300
+        if self.ticks > cutoff:
+            for brick in self.bricks:
+                brick.y += 1
+            self.ticks = 0
+    
+    def shift_brick_collision(self):
+        for brick in self.bricks:
+            if brick.y >= self.paddle.y-1:
                 self.game_over = True
 
     def render(self):
@@ -190,7 +207,7 @@ class Board():
 
         if(self.lives > 0 and self.game_over == False):
             for ball in self.balls:
-                ball.move(self)
+                ball.move(self) # checking ball collision here itself
                 if ball in self.balls:
                     for row in range(ball.y, ball.y+ball.height):
                         for col in range(ball.x, ball.x+ball.width):
@@ -198,6 +215,11 @@ class Board():
                             self.board[row][col] = ball.pixel
         else: 
             self.game_over = True
+
+        # shift bricks after some time
+        self.shift_brick_collision() # check for brick paddle collision
+        if self.game_over == False:
+            self.shift_bricks()
 
         # when no bricks are left
         self.no_bricks_left()
@@ -266,3 +288,4 @@ class Board():
 
         if(self.game_over ==  False):
             self.currentTime = time()
+            self.ticks += 1
