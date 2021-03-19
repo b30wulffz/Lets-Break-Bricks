@@ -284,6 +284,13 @@ class Board():
         # check for the case when no bricks are left
         self.no_bricks_left()
 
+        powerup_timer = {}
+        for keys in ["1","2","3","4","5","6","7","8"]:
+            powerup_timer[keys] = 0
+        for powerup in self.active_powerups:
+            time_left = powerup.expire_time - math.floor(self.currentTime-powerup.create_time)
+            powerup_timer[powerup.name] = max(time_left, powerup_timer[powerup.name])
+
         # adding borders to board
         score_board_height = 8
         wall = 1
@@ -316,7 +323,13 @@ class Board():
         lives_text_offset = (self.cols+wall-len(lives_text)) * 7 // 8
         for j in range(0, len(lives_text)):
             self.output[3][lives_text_offset+j] = Back.BLUE+Fore.RED+lives_text[j]+Style.RESET_ALL
-        
+
+        text = "Powerups:  [1] {}s  [2] {}s  [3] {}s  [4] {}s  [5] {}s  [6] {}s  [7] {}s  [8] {}s".format(powerup_timer["1"], powerup_timer["2"], powerup_timer["3"], powerup_timer["4"], powerup_timer["5"], powerup_timer["6"], powerup_timer["7"], powerup_timer["8"])
+        offset = (self.cols+wall-len(text)) // 2
+        for j in range(0, len(text)):
+            self.output[5][offset+j] = Back.BLUE+Fore.RED+text[j]+Style.RESET_ALL
+
+
         if self.boss is not None:
             health_bar_len = 40
             text = "Boss: "
