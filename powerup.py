@@ -91,7 +91,7 @@ class Thru_Ball(PowerUP):
     def __init__(self, x, y, create_time):
         super().__init__(x, y, create_time)
         self.name="5"
-        self.expire_time = 50
+        self.expire_time = 5
 
 class Paddle_Grab(PowerUP):
     def __init__(self, x, y, create_time):
