@@ -12,7 +12,7 @@ class Bullet():
         self.velocity_y = -1
         
         self.pixel = Back.RED+' '+Style.RESET_ALL
-        self.avoid_pixel = [Back.RED+Fore.WHITE+str(i)+Style.RESET_ALL for i in range(1,8)]
+        self.avoid_pixel = [Back.RED+Fore.WHITE+str(i)+Style.RESET_ALL for i in range(1,9)]
         self.avoid_pixel += [self.pixel, Back.BLUE+Fore.RED+'*'+Style.RESET_ALL]
     
     def move(self, board):

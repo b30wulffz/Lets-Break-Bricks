@@ -16,7 +16,7 @@ class PowerUP():
         self.width = 3
 
         self.pixel =  Back.RED+' '+Style.RESET_ALL
-        self.avoid_pixel = [Back.RED+Fore.WHITE+str(i)+Style.RESET_ALL for i in range(1,8)]
+        self.avoid_pixel = [Back.RED+Fore.WHITE+str(i)+Style.RESET_ALL for i in range(1,9)]
         self.avoid_pixel += [self.pixel, Back.BLUE+Fore.RED+'*'+Style.RESET_ALL]
 
     def get_coordinates(self, direction):
@@ -103,3 +103,8 @@ class Shooting_Paddle(PowerUP):
         super().__init__(x, y, create_time)
         self.name="7"
         self.expire_time = 5
+
+class Fireball(PowerUP):
+    def __init__(self, x, y, create_time):
+        super().__init__(x, y, create_time)
+        self.name="8"

@@ -3,7 +3,7 @@ from os import system
 from paddle import Paddle
 from ball import Ball
 from brick import EasyBrick, MediumBrick, HardBrick, UnbreakableBrick, SuperBrick
-from powerup import Expand_Paddle, Shrink_Paddle, Ball_Multiplier, Fast_Ball, Thru_Ball, Paddle_Grab, Shooting_Paddle
+from powerup import Expand_Paddle, Shrink_Paddle, Ball_Multiplier, Fast_Ball, Thru_Ball, Paddle_Grab, Shooting_Paddle, Fireball
 from pattern import Pattern
 from bullet import Bullet
 from boss import Boss
@@ -53,7 +53,7 @@ class Board():
         
         if(probability<40):
             temp_powerup = Expand_Paddle(0,0,0)
-            powerup_choice = random.choice([1,2,3,4,5,6,7])
+            powerup_choice = random.choice([1,2,3,4,5,6,7,8])
             x = random.randint(brick.x, brick.x+brick.width-temp_powerup.width)
             if(powerup_choice == 1):
                 self.generated_powerups.append(Expand_Paddle(x, brick.y, time()))
@@ -69,16 +69,23 @@ class Board():
                 self.generated_powerups.append(Paddle_Grab(x, brick.y, time()))
             elif(powerup_choice == 7):
                 self.generated_powerups.append(Shooting_Paddle(x, brick.y, time()))
+            elif(powerup_choice == 8):
+                self.generated_powerups.append(Fireball(x, brick.y, time()))
                 
-    def brick_detect_and_remove(self, x, y, forced=False):
+    def brick_detect_and_remove(self, x, y, forced=False, fireball_trigger=False):
         score = 0
+        fireball_powerup = None
+        for powerup in self.active_powerups:
+            if(type(powerup) is Fireball):
+                fireball_powerup = powerup
+                break
         for brick in self.bricks:
             x_lower = brick.x
             x_upper = brick.x + brick.width -1
             y_lower = brick.y
             y_upper = brick.y + brick.height -1
             if( x_lower <= x and x_upper >= x and y_lower <= y and y_upper >= y):
-                if(type(brick) is SuperBrick):
+                if(type(brick) is SuperBrick or (fireball_powerup is not None and fireball_trigger == False)):
                     score = brick.reduce_health(True)
                     self.score += score
                     self.bricks.remove(brick)
@@ -86,7 +93,7 @@ class Board():
                         self.spawn_powerups(brick)
                     for y in range(brick.y-2, brick.y+brick.height-1+3):
                         for x in range(brick.x-4, brick.x+brick.width-1+4):
-                            self.brick_detect_and_remove(x,y,True)
+                            self.brick_detect_and_remove(x,y,True,True)
                 else:    
                     score = brick.reduce_health(forced)
                     if score > 0:
