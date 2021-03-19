@@ -6,6 +6,7 @@ from brick import EasyBrick, MediumBrick, HardBrick, UnbreakableBrick, SuperBric
 from powerup import Expand_Paddle, Shrink_Paddle, Ball_Multiplier, Fast_Ball, Thru_Ball, Paddle_Grab, Shooting_Paddle
 from pattern import Pattern
 from bullet import Bullet
+from boss import Boss
 import random
 from time import sleep,time
 import math
@@ -14,7 +15,7 @@ class Board():
 
     def __init__(self, balls=[]):
         self.cols = 84
-        self.rows = 34
+        self.rows = 31
         self.paddle = Paddle(self.cols//2 -12 , self.rows-1) # moving paddle to center
         self.balls = [Ball(random.randrange(self.paddle.x, self.paddle.x+self.paddle.initial_width-2), self.rows-2)] # moving ball on top of paddle at a random position
         self.score = 0
@@ -27,6 +28,7 @@ class Board():
         self.game_over = False
         self.level = 1
         self.ticks = 0
+        self.boss = None
 
         # generate bricks
         ub = UnbreakableBrick(0,0)
@@ -80,7 +82,8 @@ class Board():
                     score = brick.reduce_health(True)
                     self.score += score
                     self.bricks.remove(brick)
-                    self.spawn_powerups(brick)
+                    if brick.is_bosslayer == False:
+                        self.spawn_powerups(brick)
                     for y in range(brick.y-2, brick.y+brick.height-1+3):
                         for x in range(brick.x-4, brick.x+brick.width-1+4):
                             self.brick_detect_and_remove(x,y,True)
@@ -89,8 +92,19 @@ class Board():
                     if score > 0:
                         self.score += score
                         self.bricks.remove(brick)
-                        self.spawn_powerups(brick)
+                        if brick.is_bosslayer == False:
+                            self.spawn_powerups(brick)
                 return True
+        # check for boss
+        if self.boss is not None:
+            x_lower = self.boss.x
+            x_upper = self.boss.x + self.boss.width - 1
+            y_lower = self.boss.y
+            y_upper = self.boss.y + self.boss.height - 1
+            if( x_lower <= x and x_upper >= x and y_lower <= y and y_upper >= y):
+                self.boss.reduce_health()
+                return True
+
         return False
 
     def no_bricks_left(self):
@@ -100,10 +114,13 @@ class Board():
                     self.bricks = Pattern.level_2(self.cols)
                 elif self.level == 2:
                     self.bricks = Pattern.level_3(self.cols)
+                    self.boss = Boss(self.paddle.x+6, 0)
                 self.level+=1
                 self.initialise()
             else:
-                self.game_over = True
+                if self.boss is not None:
+                    if self.boss.health == 0:
+                        self.game_over = True
 
     def shift_bricks(self):
         cutoff = 600
@@ -135,6 +152,10 @@ class Board():
             for row in range(brick.y, brick.y+brick.height):
                 for col in range(brick.x, brick.x+brick.width):
                     self.board[row][col] = brick.pixel
+
+        # render boss and bombs
+        if self.boss is not None:
+            self.boss.render(self)
 
         # render powerup
         for powerup in self.generated_powerups:
@@ -251,7 +272,7 @@ class Board():
         self.no_bricks_left()
 
         # adding borders to board
-        score_board_height = 4
+        score_board_height = 8
         wall = 1
         border_pixel = Back.BLUE+' '+Style.RESET_ALL
 
@@ -269,15 +290,32 @@ class Board():
         
         time_elpsed = math.floor(self.currentTime-self.startTime)
         time_taken = "Time: {} seconds".format(time_elpsed)
-        time_taken_offset = (self.cols+wall-len(time_taken)) * 4 //8
+        time_taken_offset = (self.cols+wall-len(time_taken)) * 3 //8
         for j in range(0, len(time_taken)):
             self.output[3][time_taken_offset+j] = Back.BLUE+Fore.RED+time_taken[j]+Style.RESET_ALL
+        
+        text = "Level: {}".format(self.level)
+        offset = (self.cols+wall-len(text)) * 5 // 8
+        for j in range(0, len(text)):
+            self.output[3][offset+j] = Back.BLUE+Fore.RED+text[j]+Style.RESET_ALL
 
         lives_text = "Lives: {}".format(self.lives)
         lives_text_offset = (self.cols+wall-len(lives_text)) * 7 // 8
         for j in range(0, len(lives_text)):
             self.output[3][lives_text_offset+j] = Back.BLUE+Fore.RED+lives_text[j]+Style.RESET_ALL
         
+        if self.boss is not None:
+            health_bar_len = 40
+            text = "Boss: "
+            offset = (self.cols+wall-len(lives_text)-health_bar_len) // 2
+            for j in range(0, len(text)):
+                self.output[7][offset+j] = Back.BLUE+Fore.RED+text[j]+Style.RESET_ALL
+            for j in range(0, health_bar_len):
+                self.output[7][len(text)+offset+j] = Back.BLACK+" "+Style.RESET_ALL
+            boss_health = int(self.boss.health * health_bar_len / self.boss.max_health)
+            for j in range(0, boss_health):
+                self.output[7][len(text)+offset+j] = Back.YELLOW+" "+Style.RESET_ALL
+            
         for j in range(0, self.rows):
             for i in range(0, self.cols):
                 self.output[j+score_board_height+wall][i+wall] = self.board[j][i]

@@ -17,7 +17,7 @@ class PowerUP():
 
         self.pixel =  Back.RED+' '+Style.RESET_ALL
         self.avoid_pixel = [Back.RED+Fore.WHITE+str(i)+Style.RESET_ALL for i in range(1,8)]
-        self.avoid_pixel.append(self.pixel)
+        self.avoid_pixel += [self.pixel, Back.BLUE+Fore.RED+'*'+Style.RESET_ALL]
 
     def get_coordinates(self, direction):
         coordinates = []

@@ -112,7 +112,7 @@ class Pattern():
     def level_3(cols):
         ub = UnbreakableBrick(0,0)
 
-        upper_limit = 16
+        upper_limit = 14
 
         x, y = 1,5
 

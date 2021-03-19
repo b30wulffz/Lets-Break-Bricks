@@ -41,6 +41,8 @@ class Paddle():
                                 move = False
                 if(move):
                     self.x = self.x+2
+                    if board.boss is not None:
+                        board.boss.x += 2
             elif((self.x+self.width-1) < (board.cols-1)):
                 # check whether ball is touching the paddle
                 move = True
@@ -54,6 +56,8 @@ class Paddle():
                                 move = False
                 if(move):
                     self.x = self.x+1
+                    if board.boss is not None:
+                        board.boss.x += 1
         elif(char == 'a'):
             if(self.x > 1):
                 # check whether ball is touching the paddle
@@ -68,6 +72,8 @@ class Paddle():
                                 move = False
                 if(move):
                     self.x = self.x-2
+                    if board.boss is not None:
+                        board.boss.x -= 2
             elif (self.x > 0):
                 # check whether ball is touching the paddle
                 move = True
@@ -81,6 +87,8 @@ class Paddle():
                                 move = False
                 if(move):
                     self.x = self.x-1
+                    if board.boss is not None:
+                        board.boss.x -= 1
         # to launch the ball
         elif(char == 'w'):
             # check whether ball is touching the paddle
