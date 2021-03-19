@@ -1,5 +1,6 @@
 from colorama import Fore, Back, Style 
 from powerup import Fast_Ball, Thru_Ball, Paddle_Grab
+import os
 
 class Ball():
 
@@ -64,7 +65,6 @@ class Ball():
                     if self.thru_ball and is_brick:
                         self.update_position(self.x-1, self.y)
                         self.update_velocity(-self.velocity_x, self.velocity_y)
-
                     return True
 
 
@@ -242,6 +242,7 @@ class Ball():
                     if i!=0:
                         self.update_position(x,y)
                         if self.check_collision(board) == True:
+                            os.system("aplay -q ./strike.wav &")
                             break
                     i+=1
                     if(i%step == 0 and x != final_x):
@@ -258,6 +259,7 @@ class Ball():
                         # check whether inside any object, or out of bound 
                         self.update_position(x,y)
                         if self.check_overlap_collision(board) == True:
+                            os.system("aplay -q ./strike.wav &")
                             break
                     if(self.velocity_y > 0):
                         y = y+1
@@ -284,6 +286,7 @@ class Ball():
                     if i!=0:
                         self.update_position(x,y)
                         if self.check_collision(board) == True:
+                            os.system("aplay -q ./strike.wav &")
                             break
                     i+=1
                     if(i%step == 0 and y != final_y):
@@ -302,6 +305,7 @@ class Ball():
                         # check whether inside any object, or out of bound 
                         self.update_position(x,y)
                         if self.check_overlap_collision(board) == True:
+                            os.system("aplay -q ./strike.wav &")
                             break
                     if(self.velocity_x > 0):
                         x = x+1
@@ -325,6 +329,7 @@ class Ball():
                     if x!= init_x:
                         self.update_position(x,init_y)
                         if self.check_collision(board) == True:
+                            os.system("aplay -q ./strike.wav &")
                             break
                     if(self.velocity_x > 0):
                         x = x+1
@@ -348,6 +353,7 @@ class Ball():
                     if y!=init_y:
                         self.update_position(init_x,y)
                         if self.check_collision(board) == True:
+                            os.system("aplay -q ./strike.wav &")
                             break
                     if(self.velocity_y > 0):
                         y = y+1
