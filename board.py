@@ -4,6 +4,7 @@ from paddle import Paddle
 from ball import Ball
 from brick import EasyBrick, MediumBrick, HardBrick, UnbreakableBrick, SuperBrick
 from powerup import Expand_Paddle, Shrink_Paddle, Ball_Multiplier, Fast_Ball, Thru_Ball, Paddle_Grab
+from pattern import Pattern
 import random
 from time import sleep,time
 import math
@@ -23,46 +24,13 @@ class Board():
         self.generated_powerups = []
         self.active_powerups = []
         self.game_over = False
+        self.level = 1
 
         # generate bricks
         ub = UnbreakableBrick(0,0)
         x, y = 1, 1
 
-        self.bricks = []
-
-        while True:
-            x = random.choice([1, ub.width//2, ub.width//2 + 1])
-            while True:
-                if((x+ub.width)>=self.cols):
-                    break
-                index = random.choice([0,0,0,1,1,2])
-                if(index == 0):
-                    self.bricks.append(EasyBrick(x,y))
-                elif(index == 1): 
-                    self.bricks.append(MediumBrick(x,y))
-                else:
-                    self.bricks.append(HardBrick(x,y))
-                x+=ub.width+1
-            y+=ub.height+1
-            if(y>=12):
-                break
-
-        if(len(self.bricks) > 6):
-            ind = random.randint(2,6)
-            self.bricks[ind] = UnbreakableBrick(self.bricks[ind].x, self.bricks[ind].y)
-        if(len(self.bricks) > 20):
-            ind = random.randint(18,20)
-            self.bricks[ind] = UnbreakableBrick(self.bricks[ind].x, self.bricks[ind].y)
-        if(len(self.bricks) > 38):
-            ind = random.randint(35,38)
-            self.bricks[ind] = UnbreakableBrick(self.bricks[ind].x, self.bricks[ind].y)
-        if(len(self.bricks) > 38):
-            ind = random.randint(60,62)
-            self.bricks[ind] = UnbreakableBrick(self.bricks[ind].x, self.bricks[ind].y)
-            
-        ind = random.choice([13, 24, 29, 37])
-        if(len(self.bricks) > ind):
-            self.bricks[ind] = SuperBrick(self.bricks[ind].x, self.bricks[ind].y)
+        self.bricks = Pattern.level_1(self.cols)
         self.render()
 
 
@@ -220,7 +188,15 @@ class Board():
             self.game_over = True
 
         if(not any((type(brick) is not UnbreakableBrick) for brick in self.bricks)): 
-            self.game_over = True
+            if self.level < 3:
+                if self.level == 1:
+                    self.bricks = Pattern.level_2(self.cols)
+                elif self.level == 2:
+                    self.bricks = Pattern.level_3(self.cols)
+                self.level+=1
+                self.initialise()
+            else:
+                self.game_over = True
 
 
         # adding borders to board
