@@ -1,4 +1,4 @@
-# DASS Assignment 3 - Lets Break Bricks
+# DASS Assignment 2 - Lets Break Bricks
 
 As per the name suggests, this is a bricks breaking game. This game consists of a paddle, ball, and a few bricks. The ball is launched from the paddle, gets reflected upon touching the walls, and breaks the bricks. Simple? Game makes use of several powerups and special bricks, to make it more challenging and fun. Wanna experience the same? Then checkout the instructions below.
 
@@ -41,7 +41,7 @@ The game is divided into 3 levels. And yeah, successor is even more challenging 
 - Level 1: The simplest level among all, contains four rows of bricks, which need to be cleared in order to proceed to level 2.
 - Level 2: This level is a little more challenging than the previous one. It consists of 5 rows along with a twist. The rules to pass to next level are same as the previous one.
 - Level 3: This is the final and the toughest level. It consists of 5 rows of bricks as well as a Boss enemy. These 5 rows needs to be cleared and the boss enemy should be defeated in order to win the game.
-  - Boss Enemy: This is actually a UFO which keeps on flying on the top of the screen. It follows the paddle's movement, and keeps on shooting bullets at a regular time interval. If these bullets hit the paddle, then the player will lose one life. It has health of 10 units. Moreover, it will spawn a layer of bricks underneath him twice when his health reaches 5 units and 2 units. These spawned bricks will not release any powerups.
+  - Boss Enemy: This is actually a UFO which keeps on flying on top of the screen. It follows the paddle's movement, and keeps shooting bullets at some time interval. If these bullets hit the paddle, then the player will lose one life. It has health of 10 units. Moreover, it will spawn a layer of bricks underneath him twice when his health reaches 5 units and 2 units. These spawned bricks will not release any powerups.
 
 ### Falling Bricks
 
@@ -128,6 +128,7 @@ This powerup lasts for 10 seconds. <br>
 
 - Python 3
 - colorama (Python Library)
+- os (For playing music effects)
 - Linux-based terminal (in fullscreen mode)
 
 Game is developed purely in Python and follows the concept of Object Oriented Programming, which includes Abstraction, Inheritence, Polymorphism and Encapsulation.
