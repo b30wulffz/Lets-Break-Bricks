@@ -110,7 +110,7 @@ class Board():
             y_upper = self.boss.y + self.boss.height - 1
             if( x_lower <= x and x_upper >= x and y_lower <= y and y_upper >= y):
                 self.boss.reduce_health()
-                return True
+                return False
 
         return False
 
