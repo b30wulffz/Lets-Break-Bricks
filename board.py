@@ -3,8 +3,9 @@ from os import system
 from paddle import Paddle
 from ball import Ball
 from brick import EasyBrick, MediumBrick, HardBrick, UnbreakableBrick, SuperBrick
-from powerup import Expand_Paddle, Shrink_Paddle, Ball_Multiplier, Fast_Ball, Thru_Ball, Paddle_Grab
+from powerup import Expand_Paddle, Shrink_Paddle, Ball_Multiplier, Fast_Ball, Thru_Ball, Paddle_Grab, Shooting_Paddle
 from pattern import Pattern
+from bullet import Bullet
 import random
 from time import sleep,time
 import math
@@ -17,7 +18,7 @@ class Board():
         self.paddle = Paddle(self.cols//2 -12 , self.rows-1) # moving paddle to center
         self.balls = [Ball(random.randrange(self.paddle.x, self.paddle.x+self.paddle.initial_width-2), self.rows-2)] # moving ball on top of paddle at a random position
         self.score = 0
-        self.lives = 10
+        self.lives = 3
         self.bg_pixel = Back.BLACK+' '+Style.RESET_ALL
         self.startTime = time()
         self.currentTime = time()
@@ -42,6 +43,7 @@ class Board():
         self.balls = [Ball(random.randrange(self.paddle.x, self.paddle.x+self.paddle.initial_width-2), self.rows-2)]
         self.generated_powerups = []
         self.active_powerups = []
+        self.paddle.bullets = []
 
 
     def spawn_powerups(self, brick):
@@ -49,7 +51,7 @@ class Board():
         
         if(probability<40):
             temp_powerup = Expand_Paddle(0,0,0)
-            powerup_choice = random.choice([1,2,3,4,5,6])
+            powerup_choice = random.choice([1,2,3,4,5,6,7])
             x = random.randint(brick.x, brick.x+brick.width-temp_powerup.width)
             if(powerup_choice == 1):
                 self.generated_powerups.append(Expand_Paddle(x, brick.y, time()))
@@ -63,6 +65,8 @@ class Board():
                 self.generated_powerups.append(Thru_Ball(x, brick.y, time()))
             elif(powerup_choice == 6):
                 self.generated_powerups.append(Paddle_Grab(x, brick.y, time()))
+            elif(powerup_choice == 7):
+                self.generated_powerups.append(Shooting_Paddle(x, brick.y, time()))
                 
     def brick_detect_and_remove(self, x, y, forced=False):
         score = 0
@@ -198,6 +202,33 @@ class Board():
                         new_ball.velocity_x = -reference_ball.velocity_x
                     self.balls.append(new_ball)
                 powerup.used = True
+
+        # activate shooting paddle powerup
+        shooting_paddle_powerup = None
+        for powerup in self.active_powerups:
+            if(type(powerup) is Shooting_Paddle):
+                shooting_paddle_powerup = powerup
+                break
+
+        if shooting_paddle_powerup is not None:
+
+            # paddle cannon points
+            for row in range(self.paddle.y, self.paddle.y+self.paddle.height):
+                for col in [self.paddle.x, self.paddle.x+self.paddle.width-1]:
+                    self.board[row][col] = self.paddle.bullet_launcher_pixel
+
+            # generate bullets
+            if(self.ticks % 7 == 0):
+                tmp_bullet = Bullet(0,0)
+                self.paddle.bullets.append(Bullet(self.paddle.x, self.paddle.y-tmp_bullet.height))
+                self.paddle.bullets.append(Bullet(self.paddle.x+self.paddle.width-tmp_bullet.width, self.paddle.y-tmp_bullet.height))
+            
+        # render bullets
+        for bullet in self.paddle.bullets:
+            bullet.move(self)
+            for row in range(bullet.y, bullet.y+bullet.height):
+                for col in range(bullet.x, bullet.x+bullet.width):
+                    self.board[row][col] = bullet.pixel
 
         # render ball
         if(len(self.balls) == 0):

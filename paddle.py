@@ -14,6 +14,8 @@ class Paddle():
         self.width = 30
 
         self.pixel = Back.GREEN+' '+Style.RESET_ALL
+        self.bullets = []
+        self.bullet_launcher_pixel = Back.MAGENTA+' '+Style.RESET_ALL
 
     def update_position(self, x, y):
         self.x = x

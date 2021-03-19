@@ -14,7 +14,7 @@ class Ball():
         self.width = 2
 
         self.pixel =  Back.RED+' '+Style.RESET_ALL
-        self.avoid_pixel = [Back.RED+Fore.WHITE+str(i)+Style.RESET_ALL for i in range(1,7)]
+        self.avoid_pixel = [Back.RED+Fore.WHITE+str(i)+Style.RESET_ALL for i in range(1,8)]
         self.avoid_pixel.append(self.pixel)
         self.thru_ball = False
         self.hold = False
