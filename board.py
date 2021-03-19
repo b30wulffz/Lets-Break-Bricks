@@ -88,6 +88,18 @@ class Board():
                 return True
         return False
 
+    def no_bricks_left(self):
+        if(not any((type(brick) is not UnbreakableBrick) for brick in self.bricks)): 
+            if self.level < 3:
+                if self.level == 1:
+                    self.bricks = Pattern.level_2(self.cols)
+                elif self.level == 2:
+                    self.bricks = Pattern.level_3(self.cols)
+                self.level+=1
+                self.initialise()
+            else:
+                self.game_over = True
+
     def render(self):
         system('clear')
         self.board = [[self.bg_pixel for i in range(self.cols)] for j in range(self.rows)]
@@ -187,16 +199,8 @@ class Board():
         else: 
             self.game_over = True
 
-        if(not any((type(brick) is not UnbreakableBrick) for brick in self.bricks)): 
-            if self.level < 3:
-                if self.level == 1:
-                    self.bricks = Pattern.level_2(self.cols)
-                elif self.level == 2:
-                    self.bricks = Pattern.level_3(self.cols)
-                self.level+=1
-                self.initialise()
-            else:
-                self.game_over = True
+        # when no bricks are left
+        self.no_bricks_left()
 
 
         # adding borders to board
