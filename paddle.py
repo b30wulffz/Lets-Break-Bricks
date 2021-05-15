@@ -14,6 +14,8 @@ class Paddle():
         self.width = 30
 
         self.pixel = Back.GREEN+' '+Style.RESET_ALL
+        self.bullets = []
+        self.bullet_launcher_pixel = Back.MAGENTA+' '+Style.RESET_ALL
 
     def update_position(self, x, y):
         self.x = x
@@ -39,6 +41,8 @@ class Paddle():
                                 move = False
                 if(move):
                     self.x = self.x+2
+                    if board.boss is not None:
+                        board.boss.x += 2
             elif((self.x+self.width-1) < (board.cols-1)):
                 # check whether ball is touching the paddle
                 move = True
@@ -52,6 +56,8 @@ class Paddle():
                                 move = False
                 if(move):
                     self.x = self.x+1
+                    if board.boss is not None:
+                        board.boss.x += 1
         elif(char == 'a'):
             if(self.x > 1):
                 # check whether ball is touching the paddle
@@ -66,6 +72,8 @@ class Paddle():
                                 move = False
                 if(move):
                     self.x = self.x-2
+                    if board.boss is not None:
+                        board.boss.x -= 2
             elif (self.x > 0):
                 # check whether ball is touching the paddle
                 move = True
@@ -79,6 +87,8 @@ class Paddle():
                                 move = False
                 if(move):
                     self.x = self.x-1
+                    if board.boss is not None:
+                        board.boss.x -= 1
         # to launch the ball
         elif(char == 'w'):
             # check whether ball is touching the paddle
@@ -88,6 +98,10 @@ class Paddle():
                     if(ball.velocity_x == 0 and ball.velocity_y == 0):
                         ball.update_velocity(random.choice([-1,1]), -1)
                     if(ball.hold):
-                        ball.hold = False                   
+                        ball.hold = False  
+
+        # debug for level up
+        elif(char == 'p'):
+            board.bricks = []           
         
         return char

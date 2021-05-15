@@ -1,5 +1,6 @@
 from colorama import Fore, Back, Style 
 from powerup import Fast_Ball, Thru_Ball, Paddle_Grab
+import os
 
 class Ball():
 
@@ -14,8 +15,9 @@ class Ball():
         self.width = 2
 
         self.pixel =  Back.RED+' '+Style.RESET_ALL
-        self.avoid_pixel = [Back.RED+Fore.WHITE+str(i)+Style.RESET_ALL for i in range(1,7)]
-        self.avoid_pixel.append(self.pixel)
+        self.avoid_pixel = [Back.RED+Fore.WHITE+str(i)+Style.RESET_ALL for i in range(1,9)]
+        # self.avoid_pixel.append(self.pixel)
+        self.avoid_pixel += [self.pixel, Back.BLUE+Fore.RED+'*'+Style.RESET_ALL]
         self.thru_ball = False
         self.hold = False
 
@@ -51,17 +53,18 @@ class Ball():
         return coordinates
     
     def check_overlap_collision(self, board):
+        init_velocities = [self.velocity_x, self.velocity_y]
+
         left_coord = self.get_coordinates("left")
         for coord in left_coord:
             if(coord['y']>=0 and coord['y']<board.rows and coord['x']>=0 and coord['x']<board.cols):
                 if(board.board[coord['y']][coord['x']] != board.bg_pixel and board.board[coord['y']][coord['x']] not in self.avoid_pixel):
                     self.update_position(self.x+1, self.y)
                     self.update_velocity(-self.velocity_x, self.velocity_y)
-                    is_brick = board.brick_detect_and_remove(coord['x'], coord['y'], self.thru_ball)
+                    is_brick = board.brick_detect_and_remove(coord['x'], coord['y'], self.thru_ball, velocities=init_velocities)
                     if self.thru_ball and is_brick:
                         self.update_position(self.x-1, self.y)
                         self.update_velocity(-self.velocity_x, self.velocity_y)
-
                     return True
 
 
@@ -71,7 +74,7 @@ class Ball():
                 if(board.board[coord['y']][coord['x']] != board.bg_pixel and board.board[coord['y']][coord['x']] not in self.avoid_pixel):
                     self.update_position(self.x-1, self.y)
                     self.update_velocity(-self.velocity_x, self.velocity_y)
-                    is_brick = board.brick_detect_and_remove(coord['x'], coord['y'], self.thru_ball)
+                    is_brick = board.brick_detect_and_remove(coord['x'], coord['y'], self.thru_ball, velocities=init_velocities)
                     if self.thru_ball and is_brick:
                         self.update_position(self.x+1, self.y)
                         self.update_velocity(-self.velocity_x, self.velocity_y)
@@ -83,7 +86,7 @@ class Ball():
                 if(board.board[coord['y']][coord['x']] != board.bg_pixel and board.board[coord['y']][coord['x']] not in self.avoid_pixel):
                     self.update_position(self.x, self.y+1)
                     self.update_velocity(self.velocity_x, -self.velocity_y)
-                    is_brick = board.brick_detect_and_remove(coord['x'], coord['y'], self.thru_ball)
+                    is_brick = board.brick_detect_and_remove(coord['x'], coord['y'], self.thru_ball, velocities=init_velocities)
                     if self.thru_ball and is_brick:
                         self.update_position(self.x, self.y-1)
                         self.update_velocity(self.velocity_x, -self.velocity_y)
@@ -95,7 +98,7 @@ class Ball():
                 if(board.board[coord['y']][coord['x']] != board.bg_pixel and board.board[coord['y']][coord['x']] not in self.avoid_pixel):
                     self.update_position(self.x, self.y-1)
                     self.update_velocity(self.velocity_x, -self.velocity_y)
-                    is_brick = board.brick_detect_and_remove(coord['x'], coord['y'], self.thru_ball)
+                    is_brick = board.brick_detect_and_remove(coord['x'], coord['y'], self.thru_ball, velocities=init_velocities)
                     if self.thru_ball and is_brick:
                         self.update_position(self.x, self.y+1)
                         self.update_velocity(self.velocity_x, -self.velocity_y)
@@ -103,6 +106,8 @@ class Ball():
         return False
 
     def check_collision(self, board):
+        init_velocities = [self.velocity_x, self.velocity_y]
+        
         left_coordinates = self.get_coordinates("left")  
         for coord in left_coordinates:
             if coord['x'] < 0:
@@ -112,7 +117,7 @@ class Ball():
             elif coord['x'] > 0 and coord['y']>=0 and coord['y']<board.rows:
                 if(board.board[coord['y']][coord['x']-1] != board.bg_pixel and board.board[coord['y']][coord['x']-1] not in self.avoid_pixel):
                     self.update_velocity(-self.velocity_x, self.velocity_y)
-                    is_brick = board.brick_detect_and_remove(coord['x']-1, coord['y'], self.thru_ball)
+                    is_brick = board.brick_detect_and_remove(coord['x']-1, coord['y'], self.thru_ball, velocities=init_velocities)
                     if self.thru_ball and is_brick:
                         self.update_velocity(-self.velocity_x, self.velocity_y)
                     return True
@@ -126,7 +131,7 @@ class Ball():
             elif coord['x'] < board.cols-1 and coord['y']>=0 and coord['y']<board.rows:
                 if(board.board[coord['y']][coord['x']+1] != board.bg_pixel and board.board[coord['y']][coord['x']+1] not in self.avoid_pixel):
                     self.update_velocity(-self.velocity_x, self.velocity_y)
-                    is_brick = board.brick_detect_and_remove(coord['x']+1, coord['y'], self.thru_ball)
+                    is_brick = board.brick_detect_and_remove(coord['x']+1, coord['y'], self.thru_ball, velocities=init_velocities)
                     if self.thru_ball and is_brick:
                         self.update_velocity(-self.velocity_x, self.velocity_y)
                     return True
@@ -140,7 +145,7 @@ class Ball():
             elif coord['y'] > 0 and coord['x']>=0 and coord['x']<board.cols:
                 if(board.board[coord['y']-1][coord['x']] != board.bg_pixel and board.board[coord['y']-1][coord['x']] not in self.avoid_pixel):
                     self.update_velocity(self.velocity_x, -self.velocity_y)
-                    is_brick = board.brick_detect_and_remove(coord['x'], coord['y']-1, self.thru_ball)
+                    is_brick = board.brick_detect_and_remove(coord['x'], coord['y']-1, self.thru_ball, velocities=init_velocities)
                     if self.thru_ball and is_brick:
                         self.update_velocity(self.velocity_x, -self.velocity_y)
                     return True
@@ -176,11 +181,16 @@ class Ball():
                             if(new_velocity_x > 2):
                                 new_velocity_x = 2
                         self.update_velocity(new_velocity_x, new_velocity_y)
+                        # shift bricks after certain time interval when ball hits the paddle
+                        if board.game_over == False: 
+                            board.shift_bricks()
+                        
                         if(any(type(powerup) is Paddle_Grab for powerup in board.active_powerups) and not any(ball.hold == True for ball in board.balls)):
                             self.hold = True
+                        
                     else:
                         self.update_velocity(self.velocity_x, new_velocity_y)
-                        is_brick = board.brick_detect_and_remove(coord['x'], coord['y']+1, self.thru_ball)
+                        is_brick = board.brick_detect_and_remove(coord['x'], coord['y']+1, self.thru_ball, velocities=init_velocities)
                         if self.thru_ball and is_brick:
                             self.update_velocity(self.velocity_x, -self.velocity_y)
                     return True
@@ -232,6 +242,7 @@ class Ball():
                     if i!=0:
                         self.update_position(x,y)
                         if self.check_collision(board) == True:
+                            os.system("aplay -q ./strike.wav &")
                             break
                     i+=1
                     if(i%step == 0 and x != final_x):
@@ -248,6 +259,7 @@ class Ball():
                         # check whether inside any object, or out of bound 
                         self.update_position(x,y)
                         if self.check_overlap_collision(board) == True:
+                            os.system("aplay -q ./strike.wav &")
                             break
                     if(self.velocity_y > 0):
                         y = y+1
@@ -274,6 +286,7 @@ class Ball():
                     if i!=0:
                         self.update_position(x,y)
                         if self.check_collision(board) == True:
+                            os.system("aplay -q ./strike.wav &")
                             break
                     i+=1
                     if(i%step == 0 and y != final_y):
@@ -292,6 +305,7 @@ class Ball():
                         # check whether inside any object, or out of bound 
                         self.update_position(x,y)
                         if self.check_overlap_collision(board) == True:
+                            os.system("aplay -q ./strike.wav &")
                             break
                     if(self.velocity_x > 0):
                         x = x+1
@@ -315,6 +329,7 @@ class Ball():
                     if x!= init_x:
                         self.update_position(x,init_y)
                         if self.check_collision(board) == True:
+                            os.system("aplay -q ./strike.wav &")
                             break
                     if(self.velocity_x > 0):
                         x = x+1
@@ -338,6 +353,7 @@ class Ball():
                     if y!=init_y:
                         self.update_position(init_x,y)
                         if self.check_collision(board) == True:
+                            os.system("aplay -q ./strike.wav &")
                             break
                     if(self.velocity_y > 0):
                         y = y+1
