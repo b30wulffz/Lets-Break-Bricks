@@ -11,7 +11,9 @@ There are 6 types of bricks:
 - Super Brick [Blue]: 400 Points: 1 Hit: Upon exploding, it breaks all the neighbours too, irrespective of their health
 - Rainbow Brick: A special type of brick which keeps on changing its level(among Easy, Medium, Hard) until hit for the first time
 
-![gameplay](./readme_assets/demo.gif)
+<p align="center" width="100%">
+    <img src="./readme_assets/demo.gif" alt="gameplay"> 
+</p>
 
 ## Instructions
 
@@ -45,7 +47,9 @@ The game is divided into 3 levels. And yeah, successor is even more challenging 
 - Level 3: This is the final and the toughest level. It consists of 5 rows of bricks as well as a Boss enemy. These 5 rows needs to be cleared and the boss enemy should be defeated in order to win the game.
   - Boss Enemy: This is actually a UFO which keeps on flying on top of the screen. It follows the paddle's movement, and keeps shooting bullets at some time interval. If these bullets hit the paddle, then the player will lose one life. It has health of 10 units. Moreover, it will spawn a layer of bricks underneath him twice when his health reaches 5 units and 2 units. These spawned bricks will not release any powerups.
 
-![gameplay](./readme_assets/boss_demo.gif)
+<p align="center" width="100%">
+    <img src="./readme_assets/boss_demo.gif" alt="boss_gameplay"> 
+</p>
 
 ### Falling Bricks
 
